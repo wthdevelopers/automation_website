@@ -1,2 +1,4 @@
 class Config:
-    FOO="bin"
+    MYSQL_USER = "root"
+    MYSQL_PASSWORD = "hehe you got me"
+    DATABASE_NAME = "wthack"
