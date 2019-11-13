@@ -4,7 +4,7 @@ Note: Any commands are run when the current directory is in /automation_website/
 1. Ensure that your computer has python3-venv
 2. Enter the virtual environment to run your code.
    1. If you're using a Microsoft Windows command prompt window:
-      ```venvBackend\Scripts\activate```
+      ```venvBackend/Scripts/activate```
    2. Otherwise if you're using Linux OSes:
       ```source venv/bin/activate```
 3. Do your development work
@@ -12,10 +12,10 @@ Note: Any commands are run when the current directory is in /automation_website/
    ```deactivate```
 
 
-### When deploying code on Docker (only for Linux OSes)
+### When deploying code on Docker (still in dev)
 1. Ensure that requirements.txt states the latest set of python modules that our code requires
    ```
-   source venvBackend\bin\activate
+   source venvBackend/bin/activate
    pip3 freeze | grep -v "pkg-resources" > requirements.txt
    deactivate
    ```
