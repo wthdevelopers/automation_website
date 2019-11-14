@@ -1,4 +1,23 @@
-# Note about the structure of this code
+# Github conventions
+### Brancing
+backend/{feature_name}
+or
+frontend/{feature_name}
+
+For those that are unfamiliar with Git, you can refer to existing tutorials like
+https://git-scm.com/docs/gittutorial
+
+Or just drop any of the seniors/myself (jun de) if you have any questions
+
+### Commit messages
+E.g.
+You have added a funciton Y in /backend/a.py, and included descriptions of it in README.md, your commit message can look like this:
+"Add function Y in /backend/a.py to {insert brief description}; Include description of function Y in README.md"
+
+Be concise, hence the rough format: {action} -> {location} -> {purpose (not always needed)}
+
+
+# About the structure of this code
 Folder structure looks generally like this:
 
 root
