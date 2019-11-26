@@ -1,26 +1,87 @@
 create database wthack_automation;
 use wthack_automation;
 
-create table `user` (`uid` varchar(36), `name` TEXT, `contact_number` TEXT, `email` TEXT, `gid` varchar(36), `participating` tinyint);
-load data infile './user.csv' into table `user` ignore 1 lines;
-create trigger user_trigger before insert on `user` for each row set NEW.uid=uuid();
 
-create table `grp` (`gid` varchar(36), `gname` text, `space` text, `categories` text);
-load data infile './grp.csv' into table `grp` ignore 1 lines;
-create trigger grp_trigger before insert on `grp` for each row set NEW.gid=uuid();
+create table `user` (
+	`uid` INT NOT NULL AUTO_INCREMENT,
+	`name` TEXT, 
+	`contact_number` TEXT, 
+	`email` TEXT, 
+	`gid` INT NOT NULL, 
+	`participating` tinyint NOT NULL,
+	PRIMARY KEY (uid)
+);
 
-create table `tool` (`tid` varchar(36), `on_loan` tinyint, `on_loan_to` varchar(36), `due_date` datetime, `tool_name` text, `description` text);
-load data infile './tool.csv' into table `tool` ignore 1 lines;
-create trigger tool_trigger before insert on `tool` for each row set NEW.tid=uuid();
+LOAD DATA INFILE '/var/lib/mysql-files/sampleData/user.csv' INTO TABLE `user`
+FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
+LINES TERMINATED BY '\n' IGNORE 1 LINES;
 
-create table `event` (`eid` varchar(36), `name` text, `start` datetime, `end` datetime, `place` text, `description` text);
-load data infile './event.csv' into table `event` ignore 1 lines;
-create trigger event_trigger before insert on `event` for each row set NEW.eid=uuid();
 
-create table `comm` (`cid` varchar(36), `name` text, `contact` text);
-load data infile './comm.csv' into table `comm` ignore 1 lines;
-create trigger comm_trigger before insert on `comm` for each row set NEW.cid=uuid();
+create table `grp` (
+	`gid` INT NOT NULL AUTO_INCREMENT, 
+	`gname` TEXT, 
+	`space` TEXT, 
+	`categories` TEXT,
+	PRIMARY KEY (gid)
+);
+load data infile '/var/lib/mysql-files/sampleData/grp.csv' into table `grp` 
+fields terminated by ',' enclosed by '"'
+lines terminated by '\n' ignore 1 lines;
 
-create table `event-comm` (`ecid` varchar(36), `eid` varchar(36), `cid` varchar(36));
-load data infile './event-comm.csv' into table `event-comm` ignore 1 lines;
-create trigger `event-comm_trigger` before insert on `event-comm` for each row set NEW.ecid=uuid();
+
+create table `tool` (
+	`tid` INT NOT NULL AUTO_INCREMENT, 
+	`on_loan` tinyint, 
+	`on_loan_to` INT, 
+	`due_date` datetime, 
+	`tool_name` TEXT, 
+	`description` TEXT,
+	PRIMARY KEY (tid)
+);
+load data infile '/var/lib/mysql-files/sampleData/tool.csv' into table `tool` 
+fields terminated by ','
+enclosed by '"'
+lines terminated by '\n'
+ignore 1 lines;
+
+
+create table `event` (
+	`eid` INT NOT NULL AUTO_INCREMENT, 
+	`name` TEXT, 
+	`start` datetime, 
+	`end` datetime, 
+	`place` TEXT, 
+	`description` TEXT,
+	PRIMARY KEY (eid)
+);
+load data infile '/var/lib/mysql-files/sampleData/event.csv' into table `event` 
+fields terminated by ','
+enclosed by '"'
+lines terminated by '\n'
+ignore 1 lines;
+
+
+create table `comm` (
+	`cid` INT NOT NULL AUTO_INCREMENT, 
+	`name` TEXT, 
+	`contact` TEXT,
+	PRIMARY KEY (cid)
+);
+load data infile '/var/lib/mysql-files/sampleData/comm.csv' into table `comm` 
+fields terminated by ','
+enclosed by '"'
+lines terminated by '\n'
+ignore 1 lines;
+
+
+create table `event-comm` (
+	`ecid` INT NOT NULL AUTO_INCREMENT, 
+	`eid` INT, 
+	`cid` INT,
+	PRIMARY KEY (ecid)
+);
+load data infile '/var/lib/mysql-files/sampleData/event-comm.csv' into table `event-comm` 
+fields terminated by ','
+enclosed by '"'
+lines terminated by '\n'
+ignore 1 lines;
