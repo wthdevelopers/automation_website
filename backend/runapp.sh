@@ -1,8 +1,9 @@
 #!/bin/bash
 
-docker image rm backend:1.0
-docker container stop backendServer
-docker container rm  backendServer
+# assuming that setup.sh has been ran, and there's already a virtual environment with the install packages
+# activate the virtual environment
 
-docker image build -t backend:1.0 .
-docker container run --network=host --name backendServer backend:1.0
+# source venvBackend/bin/activate
+export FLASK_APP=wsgi.py
+export FLASK_ENV=local
+python3 -m flask run --port=5000

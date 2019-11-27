@@ -4,9 +4,9 @@ import sqlalchemy as db
 
 # import modules
 dirname = os.path.dirname(__file__)
-sys.path.insert(1, os.path.join(dirname, "modules"))
-import test
-from config import Config
+sys.path.append(dirname)
+import backend 
+from config import localConfig as Config
 
 
 CONFIG_DIR = "config.py"
@@ -21,18 +21,18 @@ sqlengine = db.create_engine("mysql+pymysql://{0}:{1}@{2}/{3}".format(
 sqlengine.connect()
 
 def create_app():
-    """Initialize the core application."""
+    # initialize the core application
     app = Flask(__name__, instance_relative_config=False)
-    app.config.from_object('config.Config')
 
-    # Initialize Plugins
+    # add config values
+    flask_env = os.environ["FLASK_ENV"]
+    if flask_env == "local":
+        app.config.from_object('config.localConfig')
 
     with app.app_context():
         # load config file
-        app.config.from_pyfile(CONFIG_DIR, silent=False)
 
         # Register Blueprints
-        app.register_blueprint(test.module)
-        # app.register_blueprint(admin.admin_bp)
+        app.register_blueprint(backend.module)
 
         return app
