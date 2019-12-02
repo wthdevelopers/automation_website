@@ -1,6 +1,9 @@
 create database wthack_automation;
 use wthack_automation;
 
+CREATE USER 'ubuntu'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON wthack_automation.* TO 'ubuntu'@'localhost';
+
 
 create table `user` (
 	`uid` INT NOT NULL AUTO_INCREMENT,
@@ -12,7 +15,7 @@ create table `user` (
 	PRIMARY KEY (uid)
 );
 
-LOAD DATA INFILE '/var/lib/mysql-files/sampleData/user.csv' INTO TABLE `user`
+LOAD DATA INFILE '/var/lib/mysql-files/user.csv' INTO TABLE `user`
 FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
 LINES TERMINATED BY '\n' IGNORE 1 LINES;
 
@@ -24,7 +27,7 @@ create table `grp` (
 	`categories` TEXT,
 	PRIMARY KEY (gid)
 );
-load data infile '/var/lib/mysql-files/sampleData/grp.csv' into table `grp` 
+load data infile '/var/lib/mysql-files/grp.csv' into table `grp` 
 fields terminated by ',' enclosed by '"'
 lines terminated by '\n' ignore 1 lines;
 
@@ -38,7 +41,7 @@ create table `tool` (
 	`description` TEXT,
 	PRIMARY KEY (tid)
 );
-load data infile '/var/lib/mysql-files/sampleData/tool.csv' into table `tool` 
+load data infile '/var/lib/mysql-files/tool.csv' into table `tool` 
 fields terminated by ','
 enclosed by '"'
 lines terminated by '\n'
@@ -54,7 +57,7 @@ create table `event` (
 	`description` TEXT,
 	PRIMARY KEY (eid)
 );
-load data infile '/var/lib/mysql-files/sampleData/event.csv' into table `event` 
+load data infile '/var/lib/mysql-files/event.csv' into table `event` 
 fields terminated by ','
 enclosed by '"'
 lines terminated by '\n'
@@ -67,7 +70,7 @@ create table `comm` (
 	`contact` TEXT,
 	PRIMARY KEY (cid)
 );
-load data infile '/var/lib/mysql-files/sampleData/comm.csv' into table `comm` 
+load data infile '/var/lib/mysql-files/comm.csv' into table `comm` 
 fields terminated by ','
 enclosed by '"'
 lines terminated by '\n'
@@ -80,7 +83,7 @@ create table `event-comm` (
 	`cid` INT,
 	PRIMARY KEY (ecid)
 );
-load data infile '/var/lib/mysql-files/sampleData/event-comm.csv' into table `event-comm` 
+load data infile '/var/lib/mysql-files/event-comm.csv' into table `event-comm` 
 fields terminated by ','
 enclosed by '"'
 lines terminated by '\n'

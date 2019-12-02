@@ -2,4 +2,4 @@
 
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
-mysql -u ubuntu -p < "${SCRIPTPATH}/teardown.sql"
+mysql -u root -p < "${SCRIPTPATH}/teardown.sql"
