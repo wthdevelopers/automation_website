@@ -1,9 +1,13 @@
 create database wthack_automation;
 use wthack_automation;
 
+/*
 CREATE USER 'ubuntu'@'localhost' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON wthack_automation.* TO 'ubuntu'@'localhost';
+*/
 
+CREATE USER 'remote'@'0.0.0.0' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON wthack_automation.* TO 'remote'@'0.0.0.0';
 
 create table `user` (
 	`uid` INT NOT NULL AUTO_INCREMENT,
