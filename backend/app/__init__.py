@@ -21,10 +21,10 @@ def create_app():
 
     # initialise mysql connections and attach it to global app config object
     PyMySQL = pymysql.connect(
-        host=app.config["MYSQL_HOST"],
-        user=app.config["MYSQL_USERNAME"],
-        password=app.config["MYSQL_PASSWORD"],
-        db=app.config["MYSQL_DATABASE"],
+        host=app.config["HOST"],
+        user=app.config["USER"],
+        password=app.config["PW"],
+        db=app.config["DB_NAME"],
         charset="utf8mb4",
         cursorclass=pymysql.cursors.DictCursor
     )

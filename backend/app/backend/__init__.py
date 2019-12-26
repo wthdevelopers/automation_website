@@ -10,5 +10,5 @@ from upcoming_events import _upcoming_events
 module = Blueprint("backend", __name__)
 
 # routes and methods for this API is stated here
-module.add_url_rule("/upcoming_events", view_func=_upcoming_events, methods=["GET"])
+module.add_url_rule("/functions/upcoming_events", view_func=_upcoming_events, methods=["GET"])
 
