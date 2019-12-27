@@ -1,2 +1,2 @@
 drop database wthack_automation;
-DROP USER 'remote'@'localhost';
+DROP USER 'remote'@'0.0.0.0';
