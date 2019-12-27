@@ -7,12 +7,14 @@ def _upcoming_events():
     """
 
     # initialize queries and connections
-    query = "SELECT eid as event_id, \
-        name as event_name, \
-        start as start_datetime, \
-        end as end_datetime, \
-        place as event_location \
-        FROM event WHERE DATE(start)=CURDATE();"
+    query = "SELECT 
+            eid as event_id, \
+            name as event_name, \
+            start as start_datetime, \
+            end as end_datetime, \
+            place as event_location \
+        FROM event 
+        WHERE CURDATE() BETWEEN DATE(event.start) AND DATE(event.end);"
     connection = app.config["PYMYSQL_CONNECTION"]
 
     # submit query and retrieve values
