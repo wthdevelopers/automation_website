@@ -89,13 +89,13 @@ lines terminated by '\n'
 ignore 1 lines;
 
 
-create table `event-comm` (
+create table `event_comm` (
 	`ecid` INT NOT NULL AUTO_INCREMENT, 
 	`eid` INT, 
 	`cid` INT,
 	PRIMARY KEY (ecid)
 );
-load data infile '/var/lib/mysql-files/event-comm.csv' into table `event-comm` 
+load data infile '/var/lib/mysql-files/event_comm.csv' into table `event_comm` 
 fields terminated by ','
 enclosed by '"'
 lines terminated by '\n'

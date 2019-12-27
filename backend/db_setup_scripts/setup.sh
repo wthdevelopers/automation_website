@@ -6,7 +6,7 @@ echo $SCRIPTPATH
 
 # copy over the files that will be inserted into mysql server
 cp "${SCRIPTPATH}/sampleData/comm.csv" /var/lib/mysql-files
-cp "${SCRIPTPATH}/sampleData/event-comm.csv" /var/lib/mysql-files
+cp "${SCRIPTPATH}/sampleData/event_comm.csv" /var/lib/mysql-files
 cp "${SCRIPTPATH}/sampleData/event.csv" /var/lib/mysql-files
 cp "${SCRIPTPATH}/sampleData/grp.csv" /var/lib/mysql-files
 cp "${SCRIPTPATH}/sampleData/tool.csv" /var/lib/mysql-files
