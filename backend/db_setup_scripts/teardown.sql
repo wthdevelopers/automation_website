@@ -1,2 +1,3 @@
 drop database wthack_automation;
-DROP USER 'remote'@'0.0.0.0';
+drop database wthack_automation_test;
+DROP USER 'remote'@'%';
