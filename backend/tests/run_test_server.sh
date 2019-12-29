@@ -5,8 +5,9 @@
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 echo $SCRIPTPATH\
 
-source "${SCRIPTPATH}/venvBackend/bin/activate"
-pip3 install -r "${SCRIPTPATH}/requirements.txt"
-export FLASK_APP=wsgi.py
-export FLASK_ENV=DevVMConfig
+source "${SCRIPTPATH}/../venvBackend/bin/activate"
+pip3 install -r "${SCRIPTPATH}/../requirements.txt"
+export FLASK_APP="${SCRIPTPATH}/../wsgi.py"
+export FLASK_ENV=RemoteTest
 python3 -m flask run --port=5000
+deactivate

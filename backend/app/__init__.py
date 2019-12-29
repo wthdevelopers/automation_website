@@ -14,10 +14,12 @@ def create_app():
 
     # add config values
     flask_env = os.environ["FLASK_ENV"]
-    if flask_env == "local":
+    if flask_env == "LocalConfig":
         app.config.from_object('config.LocalConfig')
-    elif flask_env == "devVM":
+    elif flask_env == "DevVMConfig":
         app.config.from_object('config.DevVMConfig')
+    elif flask_env == "RemoteTest":
+        app.config.from_object('config.RemoteTest')
 
     # initialise mysql connections and attach it to global app config object
     PyMySQL = pymysql.connect(
@@ -28,6 +30,7 @@ def create_app():
         charset="utf8mb4",
         cursorclass=pymysql.cursors.DictCursor
     )
+    PyMySQL.autocommit(True)
     app.config.from_mapping(
                 PYMYSQL_CONNECTION = PyMySQL
             )
