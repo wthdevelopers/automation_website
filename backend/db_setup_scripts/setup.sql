@@ -1,5 +1,5 @@
 create database wthack_automation;
-use wthack_automation;
+create database wthack_automation_test;
 
 /*
 CREATE USER 'ubuntu'@'localhost' IDENTIFIED BY 'password';
@@ -13,10 +13,12 @@ DROP DATABASE IF EXISTS test;  -- drop test db
 DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
 
 -- create user for remote connection
-CREATE USER 'remote'@'0.0.0.0' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON wthack_automation.* TO 'remote'@'0.0.0.0';
+GRANT ALL PRIVILEGES ON wthack_automation.* TO 'remote'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON wthack_automation_test.* TO 'remote'@'%' IDENTIFIED BY 'password';
 FLUSH PRIVILEGES;
 
+-- create and fill up tables for wthack_automation
+use wthack_automation;
 create table `user` (
 	`uid` INT NOT NULL AUTO_INCREMENT,
 	`name` TEXT, 
@@ -100,3 +102,58 @@ fields terminated by ','
 enclosed by '"'
 lines terminated by '\n'
 ignore 1 lines;
+
+
+-- create tables for wthack_automation_test
+create table `user` (
+        `uid` INT NOT NULL AUTO_INCREMENT,
+        `name` TEXT,
+        `contact_number` TEXT,
+        `email` TEXT,
+        `gid` INT NOT NULL,
+        `participating` tinyint NOT NULL,
+        PRIMARY KEY (uid)
+);
+
+create table `grp` (
+        `gid` INT NOT NULL AUTO_INCREMENT,
+        `gname` TEXT,
+        `space` TEXT,
+        `categories` TEXT,
+        PRIMARY KEY (gid)
+);
+
+create table `tool` (
+        `tid` INT NOT NULL AUTO_INCREMENT,
+        `on_loan` tinyint,
+        `on_loan_to` INT,
+        `due_date` datetime,
+        `tool_name` TEXT,
+        `description` TEXT,
+        PRIMARY KEY (tid)
+);
+
+create table `event` (
+        `eid` INT NOT NULL AUTO_INCREMENT,
+        `name` TEXT,
+        `start` datetime,
+        `end` datetime,
+        `place` TEXT,
+        `description` TEXT,
+        PRIMARY KEY (eid)
+);
+
+create table `comm` (
+        `cid` INT NOT NULL AUTO_INCREMENT,
+        `name` TEXT,
+        `contact` TEXT,
+        PRIMARY KEY (cid)
+);
+
+create table `event_comm` (
+        `ecid` INT NOT NULL AUTO_INCREMENT,
+        `eid` INT,
+        `cid` INT,
+        PRIMARY KEY (ecid)
+);
+
