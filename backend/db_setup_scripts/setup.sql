@@ -105,6 +105,7 @@ ignore 1 lines;
 
 
 -- create tables for wthack_automation_test
+use wthack_automation_test;
 create table `user` (
         `uid` INT NOT NULL AUTO_INCREMENT,
         `name` TEXT,
