@@ -17,7 +17,8 @@ PyMySQL = pymysql.connect(
     password=RemoteTest.PW,
     db=RemoteTest.DB_NAME,
     charset="utf8mb4",
-    cursorclass=pymysql.cursors.DictCursor
+    cursorclass=pymysql.cursors.DictCursor,
+    autocommit=True
 )
 
 pass_count = 0
@@ -34,7 +35,7 @@ def clean_all_tables():
         cursor.execute("DELETE FROM grp")
         cursor.execute("DELETE FROM tool")
         cursor.execute("DELETE FROM user")
-    PyMySQL.commit()
+    
 
 def index_of_string_difference(first, second):
     """
@@ -51,27 +52,23 @@ def index_of_string_difference(first, second):
         if ord(first[i]) != ord(second[i]):
             print("index of difference: {0}, first string char: {1}, second string char: {2}".format(i, first[i], second[i]))
 
-"""
+
 ### /functions/upcoming_events - positive test
 # insert new row and retrieve id of new row
 date_today = datetime.date.today().isoformat()
 with PyMySQL.cursor() as cursor:
     cursor.execute("INSERT INTO event (name, start, end, place, description) VALUES ('event name 1', '{0} 13:13:13', '{1} 13:13:13', 'cc10', 'event description 1')".format(date_today, date_today))
     cursor.execute("SELECT LAST_INSERT_ID();")
-    query_result = cursor.fetchall()
-PyMySQL.commit()
-row_index = query_result[0]["LAST_INSERT_ID()"]
-print("value: {0}, datatype: {1}".format(row_index, type(row_index)))
+    new_event_id = cursor.fetchall()[0]["LAST_INSERT_ID()"]
+
 
 # retrieve response from endpoint
-response = requests.get(BACKEND_URL+"/functions/upcoming_events")
-print(response.content)
-value = response.content.decode("utf-8")
+response = requests.get(BACKEND_URL+"/functions/upcoming_events").content.decode("utf-8")
 
 # comparison
 # rgd the odd string formatting: https://stackoverflow.com/questions/2755201/str-format-raises-keyerror
-to_compare = '{{"_upcoming_events_count":1,"upcoming_events":[{{"event_id":{0},"event_location":"cc10","event_name":"event name 1","event_time":{{"end_date":"{1}","end_time":"13:13","start_date":"{1}","start_time":"13:13"}}}}]}}\n'.format(row_index, date_today)
-if value == to_compare:
+to_compare = '{{"_upcoming_events_count":1,"upcoming_events":[{{"event_id":{0},"event_location":"cc10","event_name":"event name 1","event_time":{{"end_date":"{1}","end_time":"13:13","start_date":"{1}","start_time":"13:13"}}}}]}}\n'.format(new_event_id, date_today)
+if response == to_compare:
     pass_count += 1
     test_count += 1
 else:
@@ -81,18 +78,19 @@ else:
 clean_all_tables()
 
 
+
 ### /functions/find_participants - positive test
 with PyMySQL.cursor() as cursor:
     cursor.execute("INSERT INTO grp (gname, space, categories) VALUES ('group name 1', 'cc10', 'yes')")
     cursor.execute("SELECT LAST_INSERT_ID();")
     new_group_id = cursor.fetchall()[0]["LAST_INSERT_ID()"]
-PyMySQL.commit()
+
 
 with PyMySQL.cursor() as cursor:
     cursor.execute("INSERT INTO user (name, contact_number, email, gid, participating) VALUES ('user 1', '91234567', 'test.email.com', {0}, 1)".format(new_group_id))
     cursor.execute("SELECT LAST_INSERT_ID();")
     new_user_id = cursor.fetchall()[0]["LAST_INSERT_ID()"]
-PyMySQL.commit()
+
 
 response = requests.get(BACKEND_URL+"/functions/find_participants", params={"participant_name":"user"}).content.decode("utf-8")
 to_compare = '{{"_participants_count":1,"find_participants":[{{"participant_contact":"91234567","participant_id":{0},"participant_name":"user 1","participant_team_location":"cc10","participant_team_name":"group name 1"}}]}}\n'.format(new_user_id)
@@ -105,7 +103,83 @@ else:
     test_count += 1
 
 clean_all_tables()
-"""
+
+
+
+### /ocomm/get_all - positive test
+with PyMySQL.cursor() as cursor:
+    cursor.execute("INSERT INTO comm (name, contact) VALUES ('ocomm name 1', '91234567')")
+    cursor.execute("SELECT LAST_INSERT_ID();")
+    new_ocomm_id = cursor.fetchall()[0]["LAST_INSERT_ID()"]
+
+
+date_today = datetime.date.today().isoformat()
+with PyMySQL.cursor() as cursor:
+    cursor.execute("INSERT INTO event (name, start, end, place, description) VALUES ('event name 1', '{0} 13:13:13', '{0} 13:13:13', 'cc10', 'event description 1')".format(date_today))
+    cursor.execute("SELECT LAST_INSERT_ID();")
+    new_event_id = cursor.fetchall()[0]["LAST_INSERT_ID()"]
+
+
+with PyMySQL.cursor() as cursor:
+    cursor.execute("INSERT INTO event_comm (eid, cid) VALUES ({0}, {1})".format(new_event_id, new_ocomm_id,))
+
+
+response = requests.get(BACKEND_URL+"/ocomm/get_all").content.decode("utf-8")
+to_compare = '{{"_ocomm_count":1,"find_ocomm":[{{"ocomm_contact":"91234567","ocomm_current_location":"cc10","ocomm_current_shift_time":{{"end_date":"{0}","end_time":"13:13","start_date":"{0}","start_time":"13:13"}},"ocomm_id":{1},"ocomm_name":"ocomm name 1"}}]}}\n'.format(date_today, new_ocomm_id)
+if response == to_compare:
+    pass_count += 1
+    test_count += 1
+else:
+    print("test failed: /ocomm/get_all - positive test")
+    index_of_string_difference(response, to_compare)
+    test_count += 1
+
+clean_all_tables()
+
+
+
+### /participants/register - positive test
+with PyMySQL.cursor() as cursor:
+    cursor.execute("INSERT INTO user (name, contact_number, email, gid, participating) VALUES ('user 1', '91234567', 'test@email.com', '0', '0')")
+    cursor.execute("SELECT LAST_INSERT_ID();")
+    new_user_id = cursor.fetchall()[0]["LAST_INSERT_ID()"]
+
+response = requests.put(BACKEND_URL+"/participants/register", params={"particiapant_id":"{0}".format(new_user_id)}).content.decode("utf-8")
+
+with PyMySQL.cursor() as cursor:
+    cursor.execute("SELECT participating FROM user WHERE uid={0}".format(new_user_id))
+    query_result = cursor.fetchall()
+
+to_compare = 1
+if query_result[0]["participating"] == to_compare:
+    pass_count += 1
+    test_count += 1
+else:
+    print("test failed: /participants/register - positive test")
+    index_of_string_difference(response, to_compare)
+    test_count += 1
+
+clean_all_tables()
+
+
+
+### /participant/get_one - positive test
+with PyMySQL.cursor() as cursor:
+    cursor.execute("INSERT INTO grp (gname, space, categories) VALUES ('group name 1', 'cc10', 'yes')")
+    cursor.execute("SELECT LAST_INSERT_ID();")
+    new_grp_id = cursor.fetchall()[0]["LAST_INSERT_ID()"]
+
+with PyMySQL.cursor() as cursor:
+    cursor.execute("INSERT INTO user (name, contact_number, email, gid, participating) VALUES ('user 1', '91234567', 'test1@email.com', '{0}', '1')".format(new_grp_id))
+    cursor.execute("SELECT LAST_INSERT_ID();")
+    new_user1_id = cursor.fetchall()[0]["LAST_INSERT_ID()"]
+
+with PyMySQL.cursor() as cursor:
+    cursor.execute("INSERT INTO user (name, contact_number, email, gid, participating) VALUES ('user 2', '97654321', 'test2@email.com', '{0}', '1')".format(new_grp_id))
+    cursor.execute("SELECT LAST_INSERT_ID();")
+    new_user2_id = cursor.fetchall()[0]["LAST_INSERT_ID()"]
+
+response = requests.put(BACKEND_URL+"/participants/register", params={"particiapant_id":"{0}".format(new_user_id)}).content.decode("utf-8")
 
 
 

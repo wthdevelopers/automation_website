@@ -1,5 +1,17 @@
 class LocalConfig:
-    Config.MYSQL_USER = "some value"
-    Config.MYSQL_PASSWORD = "some value"
-    Config.HOST = "some value"
-    Config.DATABASE_NAME = "some value"
+    USER = "some value"
+    PW = "some value"
+    HOST = "some value"
+    DB_NAME = "some value"
+
+class DevVMConfig:
+    USER = "some value"
+    PW = "some value"
+    HOST = "some value"
+    DB_NAME = "some value"
+
+class RemoteTest:
+    USER = "some value"
+    PW = "some value"
+    HOST = "some value"
+    DB_NAME = "some value"
