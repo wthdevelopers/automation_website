@@ -3,22 +3,22 @@ from flask import jsonify, request
 
 def _ocomm_get_all():
     """
-    Returns information regarding all ocomm members and their current attending event
+    Returns information regarding all ocomm members and their current attending duty_roster
     """
     query_participant_name = request.args.get("participant_name")
     query = "SELECT \
-            comm.cid as ocomm_id, \
+            comm.comm_id as ocomm_id, \
             comm.name as ocomm_name, \
             comm.contact as ocomm_contact, \
-            event.start as start_datetime, \
-            event.end as end_datetime, \
-            event.place as ocomm_current_location \
+            duty_roster.start_datetime as start_datetime, \
+            duty_roster.end_datetime as end_datetime, \
+            duty_roster.place as ocomm_current_location \
         FROM comm \
         INNER JOIN \
-            event_comm ON comm.cid=event_comm.cid \
+            duty_roster_comm ON comm.comm_id=duty_roster_comm.comm_id \
         INNER JOIN \
-            event ON event_comm.eid=event.eid \
-        WHERE CURDATE() BETWEEN DATE(event.start) AND DATE(event.end);"
+            duty_roster ON duty_roster_comm.roster_id=duty_roster.roster_id \
+        WHERE CURDATE() BETWEEN DATE(duty_roster.start_datetime) AND DATE(duty_roster.end_datetime);"
     connection = app.config["PYMYSQL_CONNECTION"]
 
     # submit query and retrieve values

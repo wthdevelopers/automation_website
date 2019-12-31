@@ -7,12 +7,12 @@ def _find_participants():
     """
     query_participant_name = request.args.get("participant_name")
     query = "SELECT \
-            user.uid as participant_id, \
+            user.user_id as participant_id, \
             user.name as participant_name, \
             user.contact_number as participant_contact, \
-            grp.gname as participant_team_name, \
-            grp.space as participant_team_location \
-        FROM user INNER JOIN grp ON user.gid=grp.gid \
+            group.name as participant_team_name, \
+            group.space as participant_team_location \
+        FROM user INNER JOIN `group` ON user.group_id=group.group_id \
         WHERE user.name LIKE '%{0}%'".format(query_participant_name)
     connection = app.config["PYMYSQL_CONNECTION"]
 
