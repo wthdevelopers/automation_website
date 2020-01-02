@@ -199,13 +199,20 @@ create trigger group_trigger before insert on `group` for each row set @last_uui
 create table `tool` ( \
           `tool_id` varchar(36) NOT NULL, \
           `status` TEXT NOT NULL, \
-          `loan_to_group_id` varchar(36) NOT NULL, \
-          `loan_date` datetime NOT NULL, \
-          `tool_name` text NOT NULL, \
+          `name` text NOT NULL, \
           `description` text, \
           PRIMARY KEY(tool_id) \
 );
 create trigger tool_trigger before insert on `tool` for each row set @last_uuid=uuid(), NEW.tool_id=@last_uuid;
+
+create table `loan` ( \
+	`loan_id` varchar(36) NOT NULL, \
+	`tool_id` varchar(36) NOT NULL, \
+        `loan_to_user_id` varchar(36) NOT NULL, \
+        `loan_datetime` datetime NOT NULL \
+	PRIMARY KEY (loan_id) \
+);
+create trigger loan_trigger before insert on `loan` for each row set @last_uuid=uuid(), NEW.loan_id=@last_uuid;
 
 create table `competition_category`( \
           `category_id` varchar(36) NOT NULL, \
