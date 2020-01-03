@@ -201,6 +201,7 @@ create table `tool` ( \
           `status` TEXT NOT NULL, \
           `name` text NOT NULL, \
           `description` text, \
+	  `latest_loan` varchar(36), \
           PRIMARY KEY(tool_id) \
 );
 create trigger tool_trigger before insert on `tool` for each row set @last_uuid=uuid(), NEW.tool_id=@last_uuid;
@@ -209,7 +210,7 @@ create table `loan` ( \
 	`loan_id` varchar(36) NOT NULL, \
 	`tool_id` varchar(36) NOT NULL, \
         `loan_to_user_id` varchar(36) NOT NULL, \
-        `loan_datetime` datetime NOT NULL \
+        `loan_datetime` datetime NOT NULL, \
 	PRIMARY KEY (loan_id) \
 );
 create trigger loan_trigger before insert on `loan` for each row set @last_uuid=uuid(), NEW.loan_id=@last_uuid;
