@@ -7,20 +7,19 @@ def _upcoming_events():
     """
     # initialize queries and connections
     query = "SELECT \
-            event_id as event_id, \
-            name as event_name, \
-            start_datetime as start_datetime, \
-            end_datetime as end_datetime, \
+            roster_id as event_id, \
+            activity_name as event_name, \
+            start_datetime, \
+            end_datetime, \
             place as event_location \
-        FROM event \
-        WHERE CURDATE() BETWEEN DATE(event.start_datetime) AND DATE(event.end_datetime);"
+        FROM duty_roster \
+        WHERE CURDATE() BETWEEN DATE(start_datetime) AND DATE(end_datetime);"
     connection = app.config["PYMYSQL_CONNECTION"]
 
     # submit query and retrieve values
     with connection.cursor() as cursor:
         cursor.execute(query)
         query_result = cursor.fetchall()
-        print("query_result: {0}\n\n".format(query_result))
 
     # parse query output into formatted output
     output = {"upcoming_events":[], "_upcoming_events_count":0}
