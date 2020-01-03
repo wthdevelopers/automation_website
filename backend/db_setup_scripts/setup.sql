@@ -107,21 +107,25 @@ ignore 1 lines;
 -- create tables for wthack_automation_test
 use wthack_automation_test;
 create table `user` ( \
-    `user_id` varchar(36) NOT NULL, \
-	`name` TEXT NOT NULL, \
-	`contact_number` TEXT NOT NULL, \
-	`email` TEXT NOT NULL, \
-	`group_id` varchar(36), \
-	`participating` tinyint NOT NULL, \
-	`DoB` date NOT NULL, \
-	`gender` TEXT NOT NULL, \
-	`nationality` TEXT NOT NULL, \
-	`category_of_interest` TEXT NOT NULL, \
-	`skills` TEXT NOT NULL, \
-	`organisation` TEXT NOT NULL, \
-	`designation` TEXT NOT NULL, \
-	`NoK_contact_number` TEXT NOT NULL, \
-	PRIMARY KEY(user_id) \
+        `user_id` varchar(36) NOT NULL, \
+      	`name` TEXT NOT NULL, \
+      	`contact_number` TEXT NOT NULL, \
+      	`email` TEXT NOT NULL, \
+      	`group_id` varchar(36), \
+      	`participating` tinyint NOT NULL, \
+      	`DoB` datetime NOT NULL, \
+      	`gender` TEXT NOT NULL, \
+      	`nationality` TEXT NOT NULL, \
+      	`category_of_interest` TEXT NOT NULL, \
+      	`technology_of_interest` TEXT NOT NULL, \
+      	`skills` TEXT NOT NULL, \
+      	`organisation` TEXT NOT NULL, \
+      	`designation` TEXT NOT NULL, \
+      	`dietary_pref` TEXT NOT NULL, \
+      	`NoK_name` TEXT NOT NULL, \
+      	`NoK_relationship` TEXT NOT NULL, \
+      	`NoK_contact_number` TEXT NOT NULL, \
+        PRIMARY KEY(user_id) \
 );
 create trigger user_trigger before insert on `user` for each row set @last_uuid=uuid(), NEW.user_id=@last_uuid;
 
