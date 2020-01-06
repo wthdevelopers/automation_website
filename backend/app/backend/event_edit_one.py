@@ -5,7 +5,7 @@ import datetime
 
 def _event_edit_one():
     """
-    Edits one activity into the duty roster used by the ocomm 
+    Edits one activity into the schedule used by participants
     """
 
     def generate_datetime(time, date):
@@ -22,35 +22,24 @@ def _event_edit_one():
 
     connection = app.config["PYMYSQL_CONNECTION"]
     old_roster_id = request.args.get("event_id")
-    updated_duty_roster_activity = request.json["schedule_editor/edit_one"]
+    updated_event_activity = request.json["event_edit_one"]
 
-    activity_name = updated_duty_roster_activity["event_name"]
-    start_datetime = generate_datetime(updated_duty_roster_activity["event_time"]["start_time"], updated_duty_roster_activity["event_time"]["start_date"])
-    end_datetime = generate_datetime(updated_duty_roster_activity["event_time"]["end_time"], updated_duty_roster_activity["event_time"]["end_date"])
-    place = updated_duty_roster_activity["event_location"]
-    description = updated_duty_roster_activity["event_description"]
+    activity_name = updated_event_activity["event_name"]
+    start_datetime = generate_datetime(updated_event_activity["event_time"]["start_time"], updated_event_activity["event_time"]["start_date"])
+    end_datetime = generate_datetime(updated_event_activity["event_time"]["end_time"], updated_event_activity["event_time"]["end_date"])
+    place = updated_event_activity["event_location"]
+    description = updated_event_activity["event_description"]
 
-    ocomm_on_duty = updated_duty_roster_activity["ocomm_on_duty"]
-
-    query = "UPDATE duty_roster \
+    query = "UPDATE event \
         SET \
-            activity_name='{0}', \
+            name='{0}', \
             start_datetime='{1}', \
             end_datetime='{2}', \
             place='{3}', \
             description='{4}' \
-        WHERE roster_id='{5}';".format(activity_name, start_datetime, end_datetime, place, description, old_roster_id)
+        WHERE event_id='{5}';".format(activity_name, start_datetime, end_datetime, place, description, old_roster_id)
     with connection.cursor() as cursor:
         cursor.execute(query)
-
-    query = "DELETE FROM duty_roster_comm WHERE roster_id='{0}'".format(old_roster_id)
-    with connection.cursor() as cursor:
-        cursor.execute(query)
-
-    for ocomm_id in ocomm_on_duty:
-        query = "INSERT INTO duty_roster_comm (comm_id, roster_id) VALUES ('{0}', '{1}')".format(ocomm_id, old_roster_id)
-        with connection.cursor() as cursor:
-            cursor.execute(query)
 
     return "done"
 

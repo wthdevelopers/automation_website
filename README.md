@@ -1,4 +1,4 @@
-# WTHack-Automation website
+# WTHack-Automation website v1.0
 
 A website that automates some workflows required to plan/execute WTHack 2020
 
@@ -15,3 +15,11 @@ Backend:
 Frontend:
 - Designs for the frontend: 
   https://www.figma.com/file/LEd18NNjUkfn9yDlok3U8g/OComm-Front-End?node-id=0%3A1
+
+### Version history
+- 1.0
+  - Change backend's /functions/upcoming_events to display upcoming events for participants instead of the upcoming duty roster activities for ocomm members
+  - Change backend's /functions/upcoming_events to display upcoming events for participants instead of the upcoming duty roster activities for ocomm members
+  - Change operations on the resource "events"  to be on events for participants instead of the upcoming duty roster activities for ocomm members
+  - Removed /ocomm/get_all
+  - Update keys of response json to correspond to the name of the endpoint

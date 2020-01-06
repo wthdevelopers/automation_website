@@ -25,11 +25,8 @@ def _item_loans_get_all():
         query_result = cursor.fetchall()
 
     # format output
-    output = {"participant_details":{"participant_details":{}, "participant_team_name": None, "team_member_details": [], "_team_member_number": 0}}
+    output = {"item_loans_get_all": [], "_item_count": 0}
 
-    print("query_result: {0}".format(query_result))
-
-    output = {"item_loans": [], "_item_count": 0}
     for i in query_result:
         temp_tool_details = {}
         temp_tool_details["tool_name"] = i["tool_name"]
@@ -37,7 +34,7 @@ def _item_loans_get_all():
         temp_tool_details["status"] = i["status"]
         temp_tool_details["on_loan_to"] = i["on_loan_to"]
 
-        output["item_loans"].append(temp_tool_details)
+        output["item_loans_get_all"].append(temp_tool_details)
         output["_item_count"] += 1
 
     return jsonify(output)

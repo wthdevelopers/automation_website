@@ -22,7 +22,7 @@ def _find_participants():
         query_result = cursor.fetchall()
 
     # parse query output into formatted output
-    output = {"find_participants": [], "_participants_count": 0}
+    output = {"functions_find_participants": [], "_participants_count": 0}
     for each_entry in query_result:
         each_entry_output = {}
         each_entry_output["participant_id"] = each_entry["participant_id"]
@@ -31,7 +31,7 @@ def _find_participants():
         each_entry_output["participant_team_name"] = each_entry["participant_team_name"]
         each_entry_output["participant_team_location"] = each_entry["participant_team_location"]
 
-        output["find_participants"].append(each_entry_output)
+        output["functions_find_participants"].append(each_entry_output)
         output["_participants_count"] += 1
 
     return jsonify(output)

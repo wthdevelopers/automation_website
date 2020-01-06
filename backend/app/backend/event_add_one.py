@@ -5,7 +5,7 @@ import datetime
 
 def _event_add_one():
     """
-    Adds one activity into the duty roster used by the ocomm 
+    Adds one activity into the schedule viewed by participants
     """
 
     def generate_datetime(time, date):
@@ -21,25 +21,16 @@ def _event_add_one():
         return datetime.datetime(year, month, day, hour, minute)
 
     connection = app.config["PYMYSQL_CONNECTION"]
-    new_duty_roster_activity = request.json["schedule_editor/add"]
+    new_event_activity = request.json["schedule_editor/add"]
 
-    activity_name = new_duty_roster_activity["event_name"]
-    start_datetime = generate_datetime(new_duty_roster_activity["event_time"]["start_time"], new_duty_roster_activity["event_time"]["start_date"])
-    end_datetime = generate_datetime(new_duty_roster_activity["event_time"]["end_time"], new_duty_roster_activity["event_time"]["end_date"])
-    place = new_duty_roster_activity["event_location"]
-    description = new_duty_roster_activity["event_description"]
+    activity_name = new_event_activity["event_name"]
+    start_datetime = generate_datetime(new_event_activity["event_time"]["start_time"], new_event_activity["event_time"]["start_date"])
+    end_datetime = generate_datetime(new_event_activity["event_time"]["end_time"], new_event_activity["event_time"]["end_date"])
+    place = new_event_activity["event_location"]
+    description = new_event_activity["event_description"]
 
-    ocomm_on_duty = new_duty_roster_activity["ocomm_on_duty"]
-
-    query = "INSERT INTO duty_roster (activity_name, start_datetime, end_datetime, place, description) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}');".format(activity_name, start_datetime, end_datetime, place, description)
+    query = "INSERT INTO event (name, start_datetime, end_datetime, place, description) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}');".format(activity_name, start_datetime, end_datetime, place, description)
     with connection.cursor() as cursor:
         cursor.execute(query)
-        cursor.execute("SELECT @last_uuid;")
-        new_duty_roster_id = cursor.fetchall()[0]["@last_uuid"]
-
-    for ocomm_id in ocomm_on_duty:
-        query = "INSERT INTO duty_roster_comm (comm_id, roster_id) VALUES ('{0}', '{1}')".format(ocomm_id, new_duty_roster_id)
-        with connection.cursor() as cursor:
-            cursor.execute(query)
 
     return "done"

@@ -7,12 +7,12 @@ def _upcoming_events():
     """
     # initialize queries and connections
     query = "SELECT \
-            roster_id as event_id, \
-            activity_name as event_name, \
+            event_id as event_id, \
+            name as event_name, \
             start_datetime, \
             end_datetime, \
             place as event_location \
-        FROM duty_roster \
+        FROM event \
         WHERE CURDATE() BETWEEN DATE(start_datetime) AND DATE(end_datetime);"
     connection = app.config["PYMYSQL_CONNECTION"]
 
@@ -22,7 +22,7 @@ def _upcoming_events():
         query_result = cursor.fetchall()
 
     # parse query output into formatted output
-    output = {"upcoming_events":[], "_upcoming_events_count":0}
+    output = {"functions_upcoming_events":[], "_upcoming_events_count":0}
     for each_event in query_result:
         each_event_output = {"event_time": {}}
         each_event_output["event_id"] = each_event["event_id"]
@@ -33,7 +33,7 @@ def _upcoming_events():
         each_event_output["event_time"]["end_date"] = each_event["end_datetime"].date().isoformat()
         each_event_output["event_location"] = each_event["event_location"]
 
-        output["upcoming_events"].append(each_event_output)
+        output["functions_upcoming_events"].append(each_event_output)
         output["_upcoming_events_count"] += 1
 
     # print("output: {0}\n\n".format(output))

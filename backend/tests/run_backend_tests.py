@@ -64,17 +64,14 @@ def index_of_string_difference(first, second):
 # insert new row and retrieve id of new row
 date_today = datetime.date.today().isoformat()
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO duty_roster (activity_name, start_datetime, end_datetime, place, description) VALUES ('event name 1', '{0} 13:13:13', '{1} 13:13:13', 'cc10', 'description 1')".format(date_today, date_today))
+    cursor.execute("INSERT INTO event (name, start_datetime, end_datetime, place, description) VALUES ('event name 1', '{0} 13:13:13', '{1} 13:13:13', 'cc10', 'description 1')".format(date_today, date_today))
     cursor.execute("SELECT @last_uuid")
     new_event_id = cursor.fetchall()[0]["@last_uuid"]
 
-
-# retrieve response from endpoint
 response = requests.get(BACKEND_URL+"/functions/upcoming_events").content.decode("utf-8")
 
-# comparison
 # rgd the odd string formatting: https://stackoverflow.com/questions/2755201/str-format-raises-keyerror
-to_compare = '{{"_upcoming_events_count":1,"upcoming_events":[{{"event_id":"{0}","event_location":"cc10","event_name":"event name 1","event_time":{{"end_date":"{1}","end_time":"13:13","start_date":"{1}","start_time":"13:13"}}}}]}}\n'.format(new_event_id, date_today)
+to_compare = '{{"_upcoming_events_count":1,"functions_upcoming_events":[{{"event_id":"{0}","event_location":"cc10","event_name":"event name 1","event_time":{{"end_date":"{1}","end_time":"13:13","start_date":"{1}","start_time":"13:13"}}}}]}}\n'.format(new_event_id, date_today)
 if response == to_compare:
     pass_count += 1
     test_count += 1
@@ -103,7 +100,7 @@ with PyMySQL.cursor() as cursor:
 
 
 response = requests.get(BACKEND_URL+"/functions/find_participants", params={"participant_name":"user"}).content.decode("utf-8")
-to_compare = '{{"_participants_count":1,"find_participants":[{{"participant_contact":"91234567","participant_id":"{0}","participant_name":"user 1","participant_team_location":"cc10","participant_team_name":"group name 1"}}]}}\n'.format(new_user_id)
+to_compare = '{{"_participants_count":1,"functions_find_participants":[{{"participant_contact":"91234567","participant_id":"{0}","participant_name":"user 1","participant_team_location":"cc10","participant_team_name":"group name 1"}}]}}\n'.format(new_user_id)
 if response == to_compare:
     pass_count += 1
     test_count += 1
@@ -112,38 +109,6 @@ else:
     print("response: {0}".format(response))
     print("to_compare: {0}".format(to_compare))
     # index_of_string_difference(response, to_compare)
-    test_count += 1
-
-clean_all_tables()
-
-
-
-### /ocomm/get_all - positive test
-with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO comm (name, contact) VALUES ('ocomm name 1', '91234567')")
-    cursor.execute("SELECT @last_uuid;")
-    new_ocomm_id = cursor.fetchall()[0]["@last_uuid"]
-
-
-date_today = datetime.date.today().isoformat()
-with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO duty_roster (activity_name, start_datetime, end_datetime, place, description) VALUES ('event name 1', '{0} 13:13:13', '{0} 13:13:13', 'cc10', 'event description 1')".format(date_today))
-    cursor.execute("SELECT @last_uuid;")
-    new_roster_id = cursor.fetchall()[0]["@last_uuid"]
-
-
-with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO duty_roster_comm (roster_id, comm_id) VALUES ('{0}', '{1}')".format(new_roster_id, new_ocomm_id,))
-
-
-response = requests.get(BACKEND_URL+"/ocomm/get_all").content.decode("utf-8")
-to_compare = '{{"_ocomm_count":1,"find_ocomm":[{{"ocomm_contact":"91234567","ocomm_current_location":"cc10","ocomm_current_shift_time":{{"end_date":"{0}","end_time":"13:13","start_date":"{0}","start_time":"13:13"}},"ocomm_id":"{1}","ocomm_name":"ocomm name 1"}}]}}\n'.format(date_today, new_ocomm_id)
-if response == to_compare:
-    pass_count += 1
-    test_count += 1
-else:
-    print("test failed: /ocomm/get_all - positive test")
-    index_of_string_difference(response, to_compare)
     test_count += 1
 
 clean_all_tables()
@@ -175,7 +140,7 @@ clean_all_tables()
 
 
 
-### /participant/get_one - positive test
+### /participants/get_one - positive test
 with PyMySQL.cursor() as cursor:
     cursor.execute("INSERT INTO `group` (name, space, categories) VALUES ('group name 1', 'cc10', 'yes')")
     cursor.execute("SELECT @last_uuid;")
@@ -193,7 +158,7 @@ with PyMySQL.cursor() as cursor:
 
 response = requests.get(BACKEND_URL+"/participants/get_one", params={"participant_id":"{0}".format(new_user1_id)}).content.decode("utf-8")
 
-to_compare = '{{"participant_details":{{"_team_member_number":1,"participant_details":{{"participant_contact":"91234567","participant_id":"{0}","participant_name":"user 1","participant_team_location":"cc10"}},"participant_team_name":"group name 1","team_member_details":[{{"participant_contact":"91234567","participant_id":"{1}","participant_name":"user 2","participant_team_location":"cc10"}}]}}}}\n'.format(new_user1_id, new_user2_id)
+to_compare = '{{"participants_get_one":{{"_team_member_number":1,"participant_details":{{"participant_contact":"91234567","participant_id":"{0}","participant_name":"user 1","participant_team_location":"cc10"}},"participant_team_name":"group name 1","team_member_details":[{{"participant_contact":"91234567","participant_id":"{1}","participant_name":"user 2","participant_team_location":"cc10"}}]}}}}\n'.format(new_user1_id, new_user2_id)
 
 if response == to_compare:
     pass_count += 1
@@ -236,7 +201,7 @@ with PyMySQL.cursor() as cursor:
 
 response = requests.get(BACKEND_URL+"/item_loans/get_all").content.decode("utf-8")
 
-to_compare = '{{"_item_count":2,"item_loans":[{{"on_loan_to":"user 1","status":"not returned","tool_id":"{0}","tool_name":"tool name 1"}},{{"on_loan_to":null,"status":"returned","tool_id":"{1}","tool_name":"tool name 2"}}]}}\n'.format(new_tool1_id, new_tool2_id)
+to_compare = '{{"_item_count":2,"item_loans_get_all":[{{"on_loan_to":"user 1","status":"not returned","tool_id":"{0}","tool_name":"tool name 1"}},{{"on_loan_to":null,"status":"returned","tool_id":"{1}","tool_name":"tool name 2"}}]}}\n'.format(new_tool1_id, new_tool2_id)
 
 if response == to_compare:
     pass_count += 1
@@ -254,26 +219,26 @@ clean_all_tables()
 
 ### event/delay_multiple - positive test
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO duty_roster (activity_name, start_datetime, end_datetime, place) VALUES ('duty_roster_activity_1', '2020-01-01 00:00:00', '2020-01-01 10:00:00', 'cc10');")
+    cursor.execute("INSERT INTO event (name, start_datetime, end_datetime, place) VALUES ('activity_1', '2020-01-01 00:00:00', '2020-01-01 10:00:00', 'cc10');")
     cursor.execute("SELECT @last_uuid;")
-    new_duty_roster1_id = cursor.fetchall()[0]["@last_uuid"]
+    new_duty_event1_id = cursor.fetchall()[0]["@last_uuid"]
 
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO duty_roster (activity_name, start_datetime, end_datetime, place) VALUES ('duty_roster_activity_2', '2020-01-01 10:00:00', '2020-01-01 12:00:00', 'cc10');")
+    cursor.execute("INSERT INTO event (name, start_datetime, end_datetime, place) VALUES ('activity_2', '2020-01-01 10:00:00', '2020-01-01 12:00:00', 'cc10');")
     cursor.execute("SELECT @last_uuid;")
-    new_duty_roster2_id = cursor.fetchall()[0]["@last_uuid"]
+    new_duty_event2_id = cursor.fetchall()[0]["@last_uuid"]
 
-request_body = {"schedule_editor/delay": {"event_id_list": [new_duty_roster1_id, new_duty_roster2_id],"delay_by_minutes": 50}}
+request_body = {"schedule_editor/delay": {"event_id_list": [new_duty_event1_id, new_duty_event2_id],"delay_by_minutes": 50}}
 response = requests.put(BACKEND_URL+"/event/delay_multiple", json=request_body).content.decode("utf-8")
 
 with PyMySQL.cursor() as cursor:
-    cursor.execute("SELECT start_datetime, end_datetime FROM duty_roster WHERE roster_id='{0}'".format(new_duty_roster1_id))
+    cursor.execute("SELECT start_datetime, end_datetime FROM event WHERE event_id='{0}'".format(new_duty_event1_id))
     query_results = cursor.fetchall()[0]
     new_start_datetime_1 = query_results["start_datetime"].isoformat()
     new_end_datetime_1 = query_results["end_datetime"].isoformat()
 
 with PyMySQL.cursor() as cursor:
-    cursor.execute("SELECT start_datetime, end_datetime FROM duty_roster WHERE roster_id='{0}'".format(new_duty_roster2_id))
+    cursor.execute("SELECT start_datetime, end_datetime FROM event WHERE event_id='{0}'".format(new_duty_event2_id))
     query_results = cursor.fetchall()[0]
     new_start_datetime_2 = query_results["start_datetime"].isoformat()
     new_end_datetime_2 = query_results["end_datetime"].isoformat()
@@ -288,7 +253,7 @@ if response == to_compare:
 else:
     print("response: \n{0}".format(response))
     print("to_compare: \n{0}".format(to_compare))
-    print("test failed: /participants/get_one - positive test")
+    print("test failed: /event/delay_multiple - positive test")
     index_of_string_difference(response, to_compare)
     test_count += 1
 
@@ -307,23 +272,18 @@ request_body = { \
         }, \
         "event_name": "Hacking Activity 01", \
         "event_location": "CC14", \
-        "event_description": "event description 1", \
-        "ocomm_on_duty": ["ocomm_id_1"] \
+        "event_description": "event description 1" \
     } \
 }
 response = requests.post(BACKEND_URL+"/event/add_one", json=request_body).content.decode("utf-8")
 
 with PyMySQL.cursor() as cursor:
-    cursor.execute("SELECT activity_name FROM duty_roster;")
-    new_tool_name = cursor.fetchall()[0]["activity_name"]
- 
-with PyMySQL.cursor() as cursor:
-    cursor.execute("SELECT comm_id FROM duty_roster_comm;")
-    new_comm_id = cursor.fetchall()[0]["comm_id"]
+    cursor.execute("SELECT name FROM event;")
+    new_event_name = cursor.fetchall()[0]["name"]
 
-response = "new_tool_name: {0}, new_comm_id: {1}".format(new_tool_name, new_comm_id)
+response = "new_event_name: {0}".format(new_event_name)
 
-to_compare = "new_tool_name: Hacking Activity 01, new_comm_id: ocomm_id_1"
+to_compare = "new_event_name: Hacking Activity 01"
 
 if response == to_compare:
     pass_count += 1
@@ -331,7 +291,7 @@ if response == to_compare:
 else:
     print("response: \n{0}".format(response))
     print("to_compare: \n{0}".format(to_compare))
-    print("test failed: /participants/get_one - positive test")
+    print("test failed: /event/add_one - positive test")
     index_of_string_difference(response, to_compare)
     test_count += 1
 
@@ -341,15 +301,12 @@ clean_all_tables()
 
 ### event/edit_one - positive test
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO duty_roster (activity_name, start_datetime, end_datetime, place, description) VALUES ('activity name 1', '2020-12-13 00:00:00', '2020-12-13 10:00:00', 'CC10', 'description 1')")
+    cursor.execute("INSERT INTO event (name, start_datetime, end_datetime, place, description) VALUES ('activity name 1', '2020-12-13 00:00:00', '2020-12-13 10:00:00', 'CC10', 'description 1')")
     cursor.execute("SELECT @last_uuid;")
-    new_duty_roster_id = cursor.fetchall()[0]["@last_uuid"]
-
-with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO duty_roster_comm (comm_id, roster_id) VALUES ('ocomm_id_1', '{0}')".format(new_duty_roster_id))
+    new_event_id = cursor.fetchall()[0]["@last_uuid"]
 
 request_body = { \
-    "schedule_editor/edit_one": { \
+    "event_edit_one": { \
         "event_time": { \
             "start_time": "17:00", \
             "start_date": "2020-12-13", \
@@ -358,25 +315,18 @@ request_body = { \
         }, \
         "event_name": "Hacking Activity 01 NEW", \
         "event_location": "CC14", \
-        "event_description": "event description 1", \
-        "ocomm_on_duty": ["ocomm_id_NEW"] \
+        "event_description": "event description 1" \
     } \
 }
-response = requests.put(BACKEND_URL+"/event/edit_one", params={"event_id": new_duty_roster_id}, json=request_body).content.decode("utf-8")
+response = requests.put(BACKEND_URL+"/event/edit_one", params={"event_id": new_event_id}, json=request_body).content.decode("utf-8")
 
 with PyMySQL.cursor() as cursor:
-    cursor.execute("SELECT activity_name FROM duty_roster WHERE roster_id='{0}';".format(new_duty_roster_id))
-    new_activity_name = cursor.fetchall()[0]["activity_name"]
+    cursor.execute("SELECT name FROM event WHERE event_id='{0}';".format(new_event_id))
+    new_event_name = cursor.fetchall()[0]["name"]
 
-query = "SELECT comm_id FROM duty_roster_comm WHERE roster_id='{0}';".format(new_duty_roster_id)
+response = "new_event_name: {0}".format(new_event_name)
 
-with PyMySQL.cursor() as cursor:
-    cursor.execute("SELECT comm_id FROM duty_roster_comm WHERE roster_id='{0}';".format(new_duty_roster_id))
-    new_comm_id = cursor.fetchall()[0]["comm_id"]
-
-response = "new_activity_name: {0}, new_comm_id: {1}".format(new_activity_name, new_comm_id)
-
-to_compare = "new_activity_name: Hacking Activity 01 NEW, new_comm_id: ocomm_id_NEW"
+to_compare = "new_event_name: Hacking Activity 01 NEW"
 
 if response == to_compare:
     pass_count += 1
@@ -384,7 +334,7 @@ if response == to_compare:
 else:
     print("response: \n{0}".format(response))
     print("to_compare: \n{0}".format(to_compare))
-    print("test failed: /participants/get_one - positive test")
+    print("test failed: /event/edit_one - positive test")
     index_of_string_difference(response, to_compare)
     test_count += 1
 
@@ -394,20 +344,20 @@ clean_all_tables()
 
 ### event/delete_one - positive test
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO duty_roster (activity_name, start_datetime, end_datetime, place, description) VALUES ('activity name 1', '2020-12-13 00:00:00', '2020-12-13 10:00:00', 'CC10', 'description 1')")
+    cursor.execute("INSERT INTO event (name, start_datetime, end_datetime, place, description) VALUES ('activity name 1', '2020-12-13 00:00:00', '2020-12-13 10:00:00', 'CC10', 'description 1')")
     cursor.execute("SELECT @last_uuid;")
-    new_duty_roster_id = cursor.fetchall()[0]["@last_uuid"]
+    new_event_id = cursor.fetchall()[0]["@last_uuid"]
 
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO duty_roster (activity_name, start_datetime, end_datetime, place, description) VALUES ('activity name 2', '2020-12-13 00:00:00', '2020-12-13 10:00:00', 'CC10', 'description 2')")
+    cursor.execute("INSERT INTO event (name, start_datetime, end_datetime, place, description) VALUES ('activity name 2', '2020-12-13 00:00:00', '2020-12-13 10:00:00', 'CC10', 'description 2')")
 
-response = requests.delete(BACKEND_URL+"/event/delete_one", params={"event_id": new_duty_roster_id}).content.decode("utf-8")
+response = requests.delete(BACKEND_URL+"/event/delete_one", params={"event_id": new_event_id}).content.decode("utf-8")
 
 with PyMySQL.cursor() as cursor:
-    cursor.execute("SELECT activity_name FROM duty_roster;")
+    cursor.execute("SELECT name FROM event;")
     response = cursor.fetchall()
 
-to_compare = [{'activity_name': 'activity name 2'}]
+to_compare = [{'name': 'activity name 2'}]
 
 if response == to_compare:
     pass_count += 1
@@ -415,7 +365,7 @@ if response == to_compare:
 else:
     print("response: \n{0}".format(response))
     print("to_compare: \n{0}".format(to_compare))
-    print("test failed: /participants/get_one - positive test")
+    print("test failed: /event/delete_one - positive test")
     index_of_string_difference(response, to_compare)
     test_count += 1
 

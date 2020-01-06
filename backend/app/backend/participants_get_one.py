@@ -31,15 +31,15 @@ def _participants_get_one():
         query_result = cursor.fetchall()
 
     # format output
-    output = {"participant_details":{"participant_details":{}, "participant_team_name": None, "team_member_details": [], "_team_member_number": 0}}
+    output = {"participants_get_one":{"participant_details":{}, "participant_team_name": None, "team_member_details": [], "_team_member_number": 0}}
     for i in query_result:
         print("i[\"participant_id\"]: {0}, participant_id: {1}".format(i["participant_id"], participant_id))
         if i["participant_id"] == participant_id:
-            output["participant_details"]["participant_details"]["participant_id"] = i["participant_id"]
-            output["participant_details"]["participant_details"]["participant_name"] = i["participant_name"]
-            output["participant_details"]["participant_details"]["participant_team_location"] = i["participant_team_location"]
-            output["participant_details"]["participant_details"]["participant_contact"] = i["participant_contact"]
-            output["participant_details"]["participant_team_name"] = i["participant_team_name"]
+            output["participants_get_one"]["participant_details"]["participant_id"] = i["participant_id"]
+            output["participants_get_one"]["participant_details"]["participant_name"] = i["participant_name"]
+            output["participants_get_one"]["participant_details"]["participant_team_location"] = i["participant_team_location"]
+            output["participants_get_one"]["participant_details"]["participant_contact"] = i["participant_contact"]
+            output["participants_get_one"]["participant_team_name"] = i["participant_team_name"]
         else:
             team_member_details = {}
             team_member_details["participant_id"] = i["participant_id"]
@@ -47,7 +47,7 @@ def _participants_get_one():
             team_member_details["participant_team_location"] = i["participant_team_location"]
             team_member_details["participant_contact"] = i["participant_contact"]
 
-            output["participant_details"]["team_member_details"].append(team_member_details)
-            output["participant_details"]["_team_member_number"] += 1
+            output["participants_get_one"]["team_member_details"].append(team_member_details)
+            output["participants_get_one"]["_team_member_number"] += 1
 
     return jsonify(output)
