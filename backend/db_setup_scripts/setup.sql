@@ -42,33 +42,6 @@ create table `user` ( \
 );
 create trigger user_trigger before insert on `user` for each row set @last_uuid=uuid(), NEW.user_id=@last_uuid;
 
-create table `duty_roster` ( \
-          `roster_id` varchar(36) NOT NULL, \
-          `activity_name` text NOT NULL, \
-          `start_datetime` datetime NOT NULL, \
-          `end_datetime` datetime NOT NULL, \
-          `place` text NOT NULL, \
-          `description` text, \
-          PRIMARY KEY(roster_id) \
-);
-create trigger duty_roster_trigger before insert on `duty_roster` for each row set @last_uuid=uuid(), NEW.roster_id=@last_uuid;
-
-create table `comm` (
-        `comm_id` varchar(36) NOT NULL, \
-        `name` TEXT NOT NULL, \
-        `contact` TEXT NOT NULL, \
-        PRIMARY KEY (comm_id) \
-);
-create trigger comm_trigger before insert on `comm` for each row set @last_uuid=uuid(), NEW.comm_id=@last_uuid;
-
-create table `duty_roster_comm` (
-	`duty_roster_comm_id` varchar(36) NOT NULL, \
-        `comm_id` varchar(36) NOT NULL, \
-	`roster_id` varchar(36) NOT NULL, \
-        PRIMARY KEY (comm_id) \
-);
-create trigger duty_roster_comm_trigger before insert on `duty_roster_comm` for each row set @last_uuid=uuid(), NEW.duty_roster_comm_id=@last_uuid;
-
 create table `event` (
           `event_id` varchar(36) NOT NULL, \
           `name` TEXT NOT NULL, \
@@ -182,33 +155,6 @@ create table `user` ( \
         PRIMARY KEY(user_id) \
 );
 create trigger user_trigger before insert on `user` for each row set @last_uuid=uuid(), NEW.user_id=@last_uuid;
-
-create table `duty_roster` ( \
-          `roster_id` varchar(36) NOT NULL, \
-          `activity_name` text NOT NULL, \
-          `start_datetime` datetime NOT NULL, \
-          `end_datetime` datetime NOT NULL, \
-          `place` text NOT NULL, \
-          `description` text, \
-          PRIMARY KEY(roster_id) \
-);
-create trigger duty_roster_trigger before insert on `duty_roster` for each row set @last_uuid=uuid(), NEW.roster_id=@last_uuid;
-
-create table `comm` (
-        `comm_id` varchar(36) NOT NULL, \
-        `name` TEXT NOT NULL, \
-        `contact` TEXT NOT NULL, \
-        PRIMARY KEY (comm_id) \
-);
-create trigger comm_trigger before insert on `comm` for each row set @last_uuid=uuid(), NEW.comm_id=@last_uuid;
-
-create table `duty_roster_comm` (
-	`duty_roster_comm_id` varchar(36) NOT NULL, \
-        `comm_id` varchar(36) NOT NULL, \
-	`roster_id` varchar(36) NOT NULL, \
-        PRIMARY KEY (comm_id) \
-);
-create trigger duty_roster_comm_trigger before insert on `duty_roster_comm` for each row set @last_uuid=uuid(), NEW.duty_roster_comm_id=@last_uuid;
 
 create table `event` (
           `event_id` varchar(36) NOT NULL, \
