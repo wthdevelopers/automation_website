@@ -8,5 +8,5 @@ echo $SCRIPTPATH\
 source "${SCRIPTPATH}/venvBackend/bin/activate"
 pip3 install -r "${SCRIPTPATH}/requirements.txt"
 export FLASK_APP="${SCRIPTPATH}/wsgi.py"
-export FLASK_ENV=DevVMConfig
+export FLASK_ENV=Production
 python3 -m flask run --port=5000

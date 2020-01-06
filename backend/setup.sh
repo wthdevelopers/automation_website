@@ -11,8 +11,9 @@ apt-get install -y mysql-server
 # activate virtual environment and install dependencies
 apt-get install -y python3-venv
 sudo -u xubuntu python3 -m venv "${SCRIPTPATH}/venvBackend"
-# source "${SCRIPTPATH}/venvBackend/bin/activate"
-# pip3 install -r "${SCRIPTPATH}/requirements.txt"
+source "${SCRIPTPATH}/venvBackend/bin/activate"
+pip3 install -r "${SCRIPTPATH}/requirements.txt"
+deactivate
 
 # setup demo data in mysql
-"${SCRIPTPATH}/setupMySQL/setup.sh"
+"${SCRIPTPATH}/db_setup_scripts/setup.sh"

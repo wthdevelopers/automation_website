@@ -1,10 +1,4 @@
-class LocalConfig:
-    USER = "some value"
-    PW = "some value"
-    HOST = "some value"
-    DB_NAME = "some value"
-
-class DevVMConfig:
+class Production:
     USER = "some value"
     PW = "some value"
     HOST = "some value"

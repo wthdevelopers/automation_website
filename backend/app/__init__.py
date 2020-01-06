@@ -14,10 +14,8 @@ def create_app():
 
     # add config values
     flask_env = os.environ["FLASK_ENV"]
-    if flask_env == "LocalConfig":
-        app.config.from_object('config.LocalConfig')
-    elif flask_env == "DevVMConfig":
-        app.config.from_object('config.DevVMConfig')
+    if flask_env == "Production":
+        app.config.from_object('config.Production')
     elif flask_env == "RemoteTest":
         app.config.from_object('config.RemoteTest')
 

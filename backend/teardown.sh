@@ -9,7 +9,7 @@ pip3 freeze > "${SCRIPTPATH}/requirements.txt"
 deactivate
 
 # remove mysql db
-"${SCRIPTPATH}/setupMySQL/teardown.sh"
+"${SCRIPTPATH}/db_setup_scripts/teardown.sh"
 
 # remove venvBackend folder
 # rm -rf "${SCRIPTPATH}/venvBackend"
