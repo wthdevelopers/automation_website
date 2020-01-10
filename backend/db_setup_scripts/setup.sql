@@ -129,6 +129,13 @@ create table `score`( \
 );
 create trigger score_trigger before insert on `score` for each row set @last_uuid=uuid(), NEW.score_id=@last_uuid;
 
+create table `judge`( \
+        `judge_id` varchar(36) NOT NULL, \
+        `name` TEXT NOT NULL, \
+        PRIMARY KEY(judge_id) \
+);
+create trigger judge_trigger before insert on `judge` for each row set @last_uuid=uuid(), NEW.judge_id=@last_uuid;
+
 
 
 -- create tables for wthack_automation_test
@@ -243,3 +250,9 @@ create table `score`( \
 );
 create trigger score_trigger before insert on `score` for each row set @last_uuid=uuid(), NEW.score_id=@last_uuid;
 
+create table `judge`( \
+        `judge_id` varchar(36) NOT NULL, \
+        `name` TEXT NOT NULL, \
+        PRIMARY KEY(judge_id) \
+);
+create trigger judge_trigger before insert on `judge` for each row set @last_uuid=uuid(), NEW.judge_id=@last_uuid;
