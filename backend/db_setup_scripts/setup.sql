@@ -127,14 +127,14 @@ create table `score`( \
       	`category_4_score` INT NOT NULL, \
         PRIMARY KEY(score_id) \
 );
-create trigger score_trigger before insert on `score` for each row set @last_uuid=uuid(), NEW.score_id=@last_uuid;
+-- score will not have a trigger. it relies on an external file's input and hence will retain the score_id from that file
 
 create table `judge`( \
         `judge_id` varchar(36) NOT NULL, \
         `name` TEXT NOT NULL, \
         PRIMARY KEY(judge_id) \
 );
-create trigger judge_trigger before insert on `judge` for each row set @last_uuid=uuid(), NEW.judge_id=@last_uuid;
+-- judge will not have a trigger. it relies on an external file's input and hence will retain the judge_id from that file
 
 
 
@@ -248,11 +248,11 @@ create table `score`( \
       	`category_4_score` INT NOT NULL, \
         PRIMARY KEY(score_id) \
 );
-create trigger score_trigger before insert on `score` for each row set @last_uuid=uuid(), NEW.score_id=@last_uuid;
+-- score will not have a trigger. it relies on an external file's input and hence will retain the score_id from that file
 
 create table `judge`( \
         `judge_id` varchar(36) NOT NULL, \
         `name` TEXT NOT NULL, \
         PRIMARY KEY(judge_id) \
 );
-create trigger judge_trigger before insert on `judge` for each row set @last_uuid=uuid(), NEW.judge_id=@last_uuid;
+-- judge will not have a trigger. it relies on an external file's input and hence will retain the judge_id from that file
