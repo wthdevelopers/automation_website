@@ -59,3 +59,7 @@ Frontend:
     - check if group is allowed to have this consumable at this amount
   - NEW endpoint "consumables/<group UID>/return/<consumable UID>/<count>"
   - Remove all event endpoints, and function/upcoming_events (seds)
+  - change "item_loans/get_all" to "loans/get_all"
+  - NEW endpoint "loans/<group UID>/loan/<tool UID>"
+    - add checks before returning success message, otherwise return errors
+  - NEW endpoint "loans/return/<tool UID>"
