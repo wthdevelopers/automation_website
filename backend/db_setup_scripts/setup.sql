@@ -42,17 +42,6 @@ create table `user` ( \
 );
 create trigger user_trigger before insert on `user` for each row set @last_uuid=uuid(), NEW.user_id=@last_uuid;
 
-create table `event` (
-          `event_id` varchar(36) NOT NULL, \
-          `name` TEXT NOT NULL, \
-          `place` TEXT NOT NULL, \
-          `start_datetime` datetime NOT NULL, \
-          `end_datetime` datetime NOT NULL, \
-          `description` text, \
-          PRIMARY KEY(event_id) \
-);
-create trigger event_trigger before insert on `event` for each row set @last_uuid=uuid(), NEW.event_id=@last_uuid;
-
 create table `consumable` ( \
           `consumable_id` varchar(36) NOT NULL, \
           `name` TEXT NOT NULL, \
@@ -162,17 +151,6 @@ create table `user` ( \
         PRIMARY KEY(user_id) \
 );
 create trigger user_trigger before insert on `user` for each row set @last_uuid=uuid(), NEW.user_id=@last_uuid;
-
-create table `event` (
-          `event_id` varchar(36) NOT NULL, \
-          `name` TEXT NOT NULL, \
-          `place` TEXT NOT NULL, \
-          `start_datetime` datetime NOT NULL, \
-          `end_datetime` datetime NOT NULL, \
-          `description` text, \
-          PRIMARY KEY(event_id) \
-);
-create trigger event_trigger before insert on `event` for each row set @last_uuid=uuid(), NEW.event_id=@last_uuid;
 
 create table `consumable` ( \
           `consumable_id` varchar(36) NOT NULL, \
