@@ -25,7 +25,7 @@ create table `user` ( \
       	`contact_number` TEXT NOT NULL, \
       	`email` TEXT NOT NULL, \
       	`group_id` varchar(36), \
-      	`participating` tinyint NOT NULL, \
+      	`registered` BOOLEAN NOT NULL, \
       	`DoB` datetime NOT NULL, \
       	`gender` TEXT NOT NULL, \
       	`nationality` TEXT NOT NULL, \
@@ -66,7 +66,6 @@ create table `group` ( \
           `group_id` varchar(36) NOT NULL, \
           `name` text NOT NULL, \
           `space` text NOT NULL, \
-          `categories` text NOT NULL, \
           PRIMARY KEY(group_id) \
 );
 create trigger group_trigger before insert on `group` for each row set @last_uuid=uuid(), NEW.group_id=@last_uuid;
@@ -135,7 +134,7 @@ create table `user` ( \
       	`contact_number` TEXT NOT NULL, \
       	`email` TEXT NOT NULL, \
       	`group_id` varchar(36), \
-      	`participating` tinyint NOT NULL, \
+      	`registered` BOOLEAN NOT NULL, \
       	`DoB` datetime NOT NULL, \
       	`gender` TEXT NOT NULL, \
       	`nationality` TEXT NOT NULL, \
@@ -176,7 +175,6 @@ create table `group` ( \
           `group_id` varchar(36) NOT NULL, \
           `name` text NOT NULL, \
           `space` text NOT NULL, \
-          `categories` text NOT NULL, \
           PRIMARY KEY(group_id) \
 );
 create trigger group_trigger before insert on `group` for each row set @last_uuid=uuid(), NEW.group_id=@last_uuid;
