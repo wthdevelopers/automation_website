@@ -72,7 +72,7 @@ create trigger group_trigger before insert on `group` for each row set @last_uui
 
 create table `tool` ( \
           `tool_id` varchar(36) NOT NULL, \
-          `status` TEXT NOT NULL, \
+          `loaned` tinyint NOT NULL, \
           `name` text NOT NULL, \
           `description` text, \
 	  `latest_loan` varchar(36), \
@@ -83,7 +83,7 @@ create trigger tool_trigger before insert on `tool` for each row set @last_uuid=
 create table `loan` ( \
 	`loan_id` varchar(36) NOT NULL, \
 	`tool_id` varchar(36) NOT NULL, \
-        `loan_to_user_id` varchar(36) NOT NULL, \
+        `loan_to_group_id` varchar(36) NOT NULL, \
         `loan_datetime` datetime NOT NULL, \
 	PRIMARY KEY (loan_id) \
 );
@@ -181,7 +181,7 @@ create trigger group_trigger before insert on `group` for each row set @last_uui
 
 create table `tool` ( \
           `tool_id` varchar(36) NOT NULL, \
-          `status` TEXT NOT NULL, \
+          `loaned` tinyint NOT NULL, \
           `name` text NOT NULL, \
           `description` text, \
 	  `latest_loan` varchar(36), \
@@ -192,7 +192,7 @@ create trigger tool_trigger before insert on `tool` for each row set @last_uuid=
 create table `loan` ( \
 	`loan_id` varchar(36) NOT NULL, \
 	`tool_id` varchar(36) NOT NULL, \
-        `loan_to_user_id` varchar(36) NOT NULL, \
+        `loan_to_group_id` varchar(36) NOT NULL, \
         `loan_datetime` datetime NOT NULL, \
 	PRIMARY KEY (loan_id) \
 );
