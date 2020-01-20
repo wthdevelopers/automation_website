@@ -43,40 +43,41 @@ create table `user` ( \
 create trigger user_trigger before insert on `user` for each row set @last_uuid=uuid(), NEW.user_id=@last_uuid;
 
 create table `consumable` ( \
-          `consumable_id` varchar(36) NOT NULL, \
-          `name` TEXT NOT NULL, \
-          `description` TEXT, \
-          `stock_qty` INT NOT NULL, \
-          `total_qty` INT NOT NULL, \
-          `quota_per_group` INT NOT NULL, \
-          PRIMARY KEY(consumable_id) \
+        `consumable_id` varchar(36) NOT NULL, \
+        `name` TEXT NOT NULL, \
+        `description` TEXT, \
+        `stock_qty` INT NOT NULL, \
+        `total_qty` INT NOT NULL, \
+        `quota_per_group` INT NOT NULL, \
+        PRIMARY KEY(consumable_id) \
 );
 create trigger consumable_trigger before insert on `consumable` for each row set @last_uuid=uuid(), NEW.consumable_id=@last_uuid;
 
 create table `consumable_group` ( \
-          `consumable_group_id` varchar(36) NOT NULL, \
-          `group_id` varchar(36) NOT NULL, \
-          `consumable_id` varchar(36) NOT NULL, \
-          `qty` INT NOT NULL, \
-          PRIMARY KEY(consumable_group_id) \
+        `consumable_group_id` varchar(36) NOT NULL, \
+        `group_id` varchar(36) NOT NULL, \
+        `consumable_id` varchar(36) NOT NULL, \
+        `qty` INT NOT NULL, \
+        PRIMARY KEY(consumable_group_id) \
 );
 create trigger consumable_group_trigger before insert on `consumable_group` for each row set @last_uuid=uuid(), NEW.consumable_group_id=@last_uuid;
 
 create table `group` ( \
-          `group_id` varchar(36) NOT NULL, \
-          `name` text NOT NULL, \
-          `space` text NOT NULL, \
-          PRIMARY KEY(group_id) \
+        `group_id` varchar(36) NOT NULL, \
+        `name` text NOT NULL, \
+        `space` text NOT NULL, \
+	`hack_submitted` tinyint NOT NULL default 0, \
+        PRIMARY KEY(group_id) \
 );
 create trigger group_trigger before insert on `group` for each row set @last_uuid=uuid(), NEW.group_id=@last_uuid;
 
 create table `tool` ( \
-          `tool_id` varchar(36) NOT NULL, \
-          `loaned` tinyint NOT NULL, \
-          `name` text NOT NULL, \
-          `description` text, \
-	  `latest_loan` varchar(36), \
-          PRIMARY KEY(tool_id) \
+        `tool_id` varchar(36) NOT NULL, \
+        `loaned` tinyint NOT NULL, \
+        `name` text NOT NULL, \
+        `description` text, \
+	`latest_loan` varchar(36), \
+        PRIMARY KEY(tool_id) \
 );
 create trigger tool_trigger before insert on `tool` for each row set @last_uuid=uuid(), NEW.tool_id=@last_uuid;
 
@@ -90,17 +91,17 @@ create table `loan` ( \
 create trigger loan_trigger before insert on `loan` for each row set @last_uuid=uuid(), NEW.loan_id=@last_uuid;
 
 create table `competition_category`( \
-          `category_id` varchar(36) NOT NULL, \
-          `name` TEXT NOT NULL, \
-          PRIMARY KEY(category_id) \
+        `category_id` varchar(36) NOT NULL, \
+        `name` TEXT NOT NULL, \
+        PRIMARY KEY(category_id) \
 );
 create trigger competition_category_trigger before insert on `competition_category` for each row set @last_uuid=uuid(), NEW.category_id=@last_uuid;
 
 create table `category_group`( \
-          `category_group_id` varchar(36) NOT NULL, \
-          `category_id` varchar(36) NOT NULL, \
-          `group_id` varchar(36) NOT NULL, \
-          PRIMARY KEY(category_group_id) \
+        `category_group_id` varchar(36) NOT NULL, \
+        `category_id` varchar(36) NOT NULL, \
+        `group_id` varchar(36) NOT NULL, \
+        PRIMARY KEY(category_group_id) \
 );
 create trigger category_group_trigger before insert on `category_group` for each row set @last_uuid=uuid(), NEW.category_group_id=@last_uuid;
 
@@ -152,40 +153,41 @@ create table `user` ( \
 create trigger user_trigger before insert on `user` for each row set @last_uuid=uuid(), NEW.user_id=@last_uuid;
 
 create table `consumable` ( \
-          `consumable_id` varchar(36) NOT NULL, \
-          `name` TEXT NOT NULL, \
-          `description` TEXT, \
-          `stock_qty` INT NOT NULL, \
-          `total_qty` INT NOT NULL, \
-          `quota_per_group` INT NOT NULL, \
-          PRIMARY KEY(consumable_id) \
+        `consumable_id` varchar(36) NOT NULL, \
+        `name` TEXT NOT NULL, \
+        `description` TEXT, \
+        `stock_qty` INT NOT NULL, \
+        `total_qty` INT NOT NULL, \
+        `quota_per_group` INT NOT NULL, \
+        PRIMARY KEY(consumable_id) \
 );
 create trigger consumable_trigger before insert on `consumable` for each row set @last_uuid=uuid(), NEW.consumable_id=@last_uuid;
 
 create table `consumable_group` ( \
-          `consumable_group_id` varchar(36) NOT NULL, \
-          `group_id` varchar(36) NOT NULL, \
-          `consumable_id` varchar(36) NOT NULL, \
-          `qty` INT NOT NULL, \
-          PRIMARY KEY(consumable_group_id) \
+        `consumable_group_id` varchar(36) NOT NULL, \
+        `group_id` varchar(36) NOT NULL, \
+        `consumable_id` varchar(36) NOT NULL, \
+        `qty` INT NOT NULL, \
+        PRIMARY KEY(consumable_group_id) \
 );
 create trigger consumable_group_trigger before insert on `consumable_group` for each row set @last_uuid=uuid(), NEW.consumable_group_id=@last_uuid;
 
 create table `group` ( \
-          `group_id` varchar(36) NOT NULL, \
-          `name` text NOT NULL, \
-          `space` text NOT NULL, \
-          PRIMARY KEY(group_id) \
+        `group_id` varchar(36) NOT NULL, \
+        `name` text NOT NULL, \
+        `space` text NOT NULL, \
+	`hack_submitted` tinyint NOT NULL default 0, \
+        PRIMARY KEY(group_id) \
 );
 create trigger group_trigger before insert on `group` for each row set @last_uuid=uuid(), NEW.group_id=@last_uuid;
 
 create table `tool` ( \
-          `tool_id` varchar(36) NOT NULL, \
-          `loaned` tinyint NOT NULL, \
-          `name` text NOT NULL, \
-          `description` text, \
-	  `latest_loan` varchar(36), \
-          PRIMARY KEY(tool_id) \
+        `tool_id` varchar(36) NOT NULL, \
+        `loaned` tinyint NOT NULL, \
+        `name` text NOT NULL, \
+        `description` text, \
+	`latest_loan` varchar(36), \
+        PRIMARY KEY(tool_id) \
 );
 create trigger tool_trigger before insert on `tool` for each row set @last_uuid=uuid(), NEW.tool_id=@last_uuid;
 
@@ -199,17 +201,17 @@ create table `loan` ( \
 create trigger loan_trigger before insert on `loan` for each row set @last_uuid=uuid(), NEW.loan_id=@last_uuid;
 
 create table `competition_category`( \
-          `category_id` varchar(36) NOT NULL, \
-          `name` TEXT NOT NULL, \
-          PRIMARY KEY(category_id) \
+        `category_id` varchar(36) NOT NULL, \
+        `name` TEXT NOT NULL, \
+        PRIMARY KEY(category_id) \
 );
 create trigger competition_category_trigger before insert on `competition_category` for each row set @last_uuid=uuid(), NEW.category_id=@last_uuid;
 
 create table `category_group`( \
-          `category_group_id` varchar(36) NOT NULL, \
-          `category_id` varchar(36) NOT NULL, \
-          `group_id` varchar(36) NOT NULL, \
-          PRIMARY KEY(category_group_id) \
+        `category_group_id` varchar(36) NOT NULL, \
+        `category_id` varchar(36) NOT NULL, \
+        `group_id` varchar(36) NOT NULL, \
+        PRIMARY KEY(category_group_id) \
 );
 create trigger category_group_trigger before insert on `category_group` for each row set @last_uuid=uuid(), NEW.category_group_id=@last_uuid;
 
