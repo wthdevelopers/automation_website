@@ -3,7 +3,7 @@ catfish==1.4.4
 certifi==2018.1.18
 chardet==3.0.4
 command-not-found==0.3
-cryptography==2.3
+cryptography==2.1.4
 cupshelpers==1.0
 defer==1.0.6
 distro-info===0.18ubuntu0.18.04.1
@@ -23,7 +23,7 @@ oauth==1.0.1
 olefile==0.45.1
 onboard==1.4.1
 pexpect==4.2.1
-Pillow==6.2.0
+Pillow==5.1.0
 psutil==5.4.2
 pycairo==1.16.2
 pycrypto==2.6.1
@@ -35,10 +35,10 @@ python-dateutil==2.6.1
 python-debian==0.1.32
 python-debianbts==2.7.2
 python-magic==0.4.16
-pyxdg==0.26
-PyYAML==5.1
+pyxdg==0.25
+PyYAML==3.12
 reportlab==3.4.0
-requests==2.20.0
+requests==2.18.4
 requests-unixsocket==0.1.5
 SecretStorage==2.3.1
 sgt-launcher==0.2.4
@@ -49,7 +49,7 @@ systemd-python==234
 ubuntu-drivers-common==0.0.0
 ufw==0.36
 unattended-upgrades==0.1
-urllib3==1.24.2
+urllib3==1.22
 virtualenv==16.7.9
 wadllib==1.3.2
 xcffib==0.5.1

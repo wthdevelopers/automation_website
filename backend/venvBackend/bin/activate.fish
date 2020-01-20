@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/xubuntu/Desktop/automation_website/venvBackend"
+set -gx VIRTUAL_ENV "/home/xubuntu/Desktop/automation_website/backend/venvBackend"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
