@@ -34,6 +34,7 @@ conn = pms.connect(host=ENV.HOST,
                    user=ENV.USER,
                    password=ENV.PW,
                    db=ENV.DB_NAME)
+conn.autocommit(True)
 
 errors = []
 

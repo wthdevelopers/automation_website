@@ -2,17 +2,16 @@ from flask import current_app as app
 from flask import jsonify, request
 
 
-def _participants_register():
+def _participants_ID_deregister(id):
     """
-    Registers an existing participant
+    Deregisters an existing participant
     """
-    participant_id = request.args.get("participant_id")
-    query = "UPDATE user SET participating=1 WHERE user_id='{0}'".format(participant_id)
+    query = "UPDATE user SET registered=0 WHERE user_id='{0}'".format(id)
     connection = app.config["PYMYSQL_CONNECTION"]
 
     # submit query and retrieve values
     with connection.cursor() as cursor:
         cursor.execute(query)
 
-    return "done."
+    return "done.", 200
 
