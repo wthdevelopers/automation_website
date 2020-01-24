@@ -24,9 +24,15 @@ from groups_ID_unsubmit import _groups_ID_unsubmit
 from consumables_ID_take_ID_count import _consumables_ID_take_ID_count
 from consumables_ID_return_ID_COUNT import _consumables_ID_return_ID_COUNT
 
+from auth import _login
+from auth import _logout
 
 
 module = Blueprint("backend", __name__)
+
+@flask_login.login_required
+def _test():
+    return "HELLO WORLD"
 
 # routes and methods for this API is stated here
 module.add_url_rule("/participants/<id>/register", view_func=_participants_ID_register, methods=["PUT"])
@@ -48,3 +54,6 @@ module.add_url_rule("/groups/<group_id>/unsubmit", view_func=_groups_ID_unsubmit
 module.add_url_rule("/consumables/<group_id>/take/<consumable_id>/<count>", view_func=_consumables_ID_take_ID_count, methods=["PUT"])
 module.add_url_rule("/consumables/<group_id>/return/<consumable_id>/<count>", view_func=_consumables_ID_return_ID_COUNT, methods=["PUT"])
 
+module.add_url_rule("/login", view_func=_login, methods=["POST"])
+module.add_url_rule("/logout", view_func=_logout, methods=["GET"])
+module.add_url_rule("/test", view_func=_test, methods=["GET"])
