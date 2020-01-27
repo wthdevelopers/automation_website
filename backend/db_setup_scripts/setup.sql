@@ -126,7 +126,6 @@ create table `judge`( \
 -- judge will not have a trigger. it relies on an external file's input and hence will retain the judge_id from that file
 
 create table `credentials`(
-	`username` TEXT NOT NULL, \
 	`password` varchar(256) NOT NULL \
 );
 
@@ -241,7 +240,6 @@ create table `judge`( \
 -- judge will not have a trigger. it relies on an external file's input and hence will retain the judge_id from that file
 
 create table `credentials`(
-        `username` TEXT NOT NULL, \
         `password` varchar(256) NOT NULL \
 );
 
