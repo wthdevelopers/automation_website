@@ -1,4 +1,4 @@
-# WTHack-Automation website v1.0
+# WTHack-Automation website v2.0
 
 A website that automates some workflows required to plan/execute WTHack 2020
 
@@ -69,6 +69,9 @@ Frontend:
     - check if group is allowed to have this consumable at this amount
   - DONE NEW endpoint "consumables/<group UID>/return/<consumable UID>/<count>"
     - Allow a group to return a certain amount of consumables
+  - Added login functionality
+    - /login and /logout done, all other endpoints now require you to log in to access the endpoint
+    - scripts written in /insert_backend_password allows you to set username and password
 - 1.0
   - Change backend's /functions/upcoming_events to display upcoming events for participants instead of the upcoming duty roster activities for ocomm members
   - Change backend's /functions/upcoming_events to display upcoming events for participants instead of the upcoming duty roster activities for ocomm members
