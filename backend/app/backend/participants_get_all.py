@@ -1,7 +1,9 @@
 from flask import current_app as app
-from flask import jsonify, request
+from flask import jsonify, request, session
+import flask_login
 
 
+@flask_login.login_required
 def _participants_get_all():
     """
     Returns basic information of all users

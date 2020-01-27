@@ -1,7 +1,8 @@
 from flask import current_app as app
 from flask import jsonify, request
+import flask_login
 
-
+@flask_login.login_required
 def _consumables_get_all():
     """
     Returns id, name, remaining count, quota per group

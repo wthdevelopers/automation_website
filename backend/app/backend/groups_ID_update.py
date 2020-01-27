@@ -1,7 +1,9 @@
 from flask import current_app as app
 from flask import jsonify, request
+import flask_login
 
 
+@flask_login.login_required
 def _groups_ID_update(id):
     """
     Updates all column values of group

@@ -1,6 +1,7 @@
 import sys, os
-from flask import request, url_for, jsonify, Blueprint
+from flask import request, url_for, jsonify, Blueprint, session
 from flask_api import FlaskAPI, status, exceptions
+import flask_login
 
 dirname = os.path.dirname(__file__)
 sys.path.append(dirname)
@@ -32,7 +33,10 @@ module = Blueprint("backend", __name__)
 
 @flask_login.login_required
 def _test():
+    print("test endpoint - session id: {0}".format(id(session)))
+    print("test endpoint - current_user: {0}".format(flask_login.current_user))
     return "HELLO WORLD"
+
 
 # routes and methods for this API is stated here
 module.add_url_rule("/participants/<id>/register", view_func=_participants_ID_register, methods=["PUT"])

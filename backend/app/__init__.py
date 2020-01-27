@@ -55,9 +55,10 @@ def create_app():
         username_not_in_db_state = True
         for i in query_result:
             if i["username"] == username:
-                username_in_db_state = False
+                username_not_in_db_state = False
 
         if username_not_in_db_state:
+            # print("!!! user_loader used - username_not_in_db_state", file=sys.stderr)
             return
 
         user = User()
