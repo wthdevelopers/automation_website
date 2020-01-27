@@ -1,7 +1,9 @@
 from flask import current_app as app
 from flask import jsonify, request
+import flask_login
 
 
+@flask_login.login_required
 def _loans_get_all():
     """
     Retrieves details of each tool and the name of the lastest user that loaned it

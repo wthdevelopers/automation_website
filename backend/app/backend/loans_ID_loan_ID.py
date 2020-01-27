@@ -1,8 +1,10 @@
 from flask import current_app as app
 from flask import jsonify, request
 import datetime
+import flask_login
 
 
+@flask_login.login_required
 def _loans_ID_loan_ID(group_id, tool_id):
     """
     Loans a tool to a specific group

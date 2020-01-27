@@ -1,11 +1,11 @@
 from flask import current_app as app
-from flask import jsonify, request
+from flask import jsonify, request, session
 import flask
 import hashlib, flask_login
 
 
 def _login():
-    username = request.form['username']
+    username = request.json['username']
     connection = app.config["PYMYSQL_CONNECTION"]
 
     query = "SELECT password FROM `credentials` WHERE username='{0}'".format(username)
@@ -13,20 +13,18 @@ def _login():
         cursor.execute(query)
         query_result = cursor.fetchall()
 
-    hashed_salted_password = hashlib.sha256(bytes(request.form["password"] + app.config["PW_SALT"], "utf-8")).hexdigest()
+    hashed_salted_password = hashlib.sha256(bytes(request.json["password"] + app.config["PW_SALT"], "utf-8")).hexdigest()
     is_authenticated = hashed_salted_password == query_result[0]["password"]
 
     if is_authenticated:
         user = app.config["User"]()
         user.id = username
         output = flask_login.login_user(user)
-        print("flask_login.login_user(user): {0}".format(output))
-        print("app.is_authenticated: {0}".format(app.is_authenticated))
-        return flask.redirect(flask.url_for('backend._test'))
+        return jsonify({"success": "Logged in"}), 200
 
-    return "Bad login"
+    return jsonify({"error": "Bad login"}), 400
 
 def _logout():
     flask_login.logout_user()
-    return "Logged out"
+    return jsonify({"success": "Logged out"}), 200
 

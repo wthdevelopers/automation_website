@@ -1,7 +1,9 @@
 from flask import current_app as app
 from flask import jsonify, request
+import flask_login
 
 
+@flask_login.login_required
 def _consumables_ID_take_ID_count(group_id, consumable_id, count):
     """
     Allow a group to consume a certain amount of consumables
