@@ -130,6 +130,67 @@ create table `credentials`(
 	`password` varchar(256) NOT NULL \
 );
 
+create table `_user_preference_category_of_interest` ( \
+	`category_of_interest_id` varchar(36) NOT NULL, \
+	`name` TEXT NOT NULL, \
+	PRIMARY KEY(category_of_interest_id) \
+);
+create trigger _user_preference_category_of_interest_trigger before insert on `_user_preference_category_of_interest` for each row set @last_uuid=uuid(), NEW.category_of_interest_id=@last_uuid;
+
+create table `_user_preference_category_of_interest_user` ( \
+        `category_of_interest_user_id` varchar(36) NOT NULL, \
+        `category_of_interest_id` varchar(36) NOT NULL, \
+        `user_id` varchar(36) NOT NULL, \
+        PRIMARY KEY(category_of_interest_user_id) \
+);
+create trigger _user_preference_category_of_interest_user_trigger before insert on `_user_preference_category_of_interest_user` for each row set @last_uuid=uuid(), NEW.category_of_interest_user_id=@last_uuid;
+
+create table `_user_preference_skills` ( \
+        `skills_id` varchar(36) NOT NULL, \
+        `name` TEXT NOT NULL, \
+        PRIMARY KEY(skills_id) \
+);
+create trigger _user_preference_skills_trigger before insert on `_user_preference_skills` for each row set @last_uuid=uuid(), NEW.skills_id=@last_uuid;
+
+create table `_user_preference_skills_user` ( \
+        `skills_user_id` varchar(36) NOT NULL, \
+        `skills_id` varchar(36) NOT NULL, \
+        `user_id` varchar(36) NOT NULL, \
+        PRIMARY KEY(skills_user_id) \
+);
+create trigger _user_preference_skills_user_trigger before insert on `_user_preference_skills_user` for each row set @last_uuid=uuid(), NEW.skills_user_id=@last_uuid;
+
+create table `_user_preference_stojo_utensils`( \
+        `stojo_utensils_id` varchar(36) NOT NULL, \
+        `name` TEXT NOT NULL, \
+        PRIMARY KEY(stojo_utensils_id) \
+);
+create trigger _user_preference_stojo_utensils_trigger before insert on `_user_preference_stojo_utensils` for each row set @last_uuid=uuid(), NEW.stojo_utensils_id=@last_uuid;
+
+create table `_user_preference_stojo_utensils_user`( \
+        `stojo_utensils_user_id` varchar(36) NOT NULL, \
+        `stojo_utensils_id` varchar(36) NOT NULL, \
+	`color` TEXT, \
+        `user_id` varchar(36) NOT NULL, \
+        PRIMARY KEY(stojo_utensils_user_id) \
+);
+create trigger _user_preference_stojo_utensils_user_trigger before insert on `_user_preference_stojo_utensils_user` for each row set @last_uuid=uuid(), NEW.stojo_utensils_user_id=@last_uuid;
+
+create table `_user_preference_workshops` ( \
+        `workshops_id` varchar(36) NOT NULL, \
+        `name` TEXT NOT NULL, \
+        PRIMARY KEY(workshops_id) \
+);
+create trigger _user_preference_workshops_trigger before insert on `_user_preference_workshops` for each row set @last_uuid=uuid(), NEW.workshops_id=@last_uuid;
+
+create table `_user_preference_workshops_user` ( \
+        `workshops_user_id` varchar(36) NOT NULL, \
+        `workshops_id` varchar(36) NOT NULL, \
+        `user_id` varchar(36) NOT NULL, \
+        PRIMARY KEY(workshops_user_id) \
+);
+create trigger _user_preference_workshops_user_trigger before insert on `_user_preference_workshops_user` for each row set @last_uuid=uuid(), NEW.workshops_user_id=@last_uuid;
+
 
 
 -- create tables for wthack_automation_test
@@ -245,3 +306,63 @@ create table `credentials`(
         `password` varchar(256) NOT NULL \
 );
 
+create table `_user_preference_category_of_interest` ( \
+        `category_of_interest_id` varchar(36) NOT NULL, \
+        `name` TEXT NOT NULL, \
+        PRIMARY KEY(category_of_interest_id) \
+);
+create trigger _user_preference_category_of_interest_trigger before insert on `_user_preference_category_of_interest` for each row set @last_uuid=uuid(), NEW.category_of_interest_id=@last_uuid;
+
+create table `_user_preference_category_of_interest_user` ( \
+        `category_of_interest_user_id` varchar(36) NOT NULL, \
+        `category_of_interest_id` varchar(36) NOT NULL, \
+        `user_id` varchar(36) NOT NULL, \
+        PRIMARY KEY(category_of_interest_user_id) \
+);
+create trigger _user_preference_category_of_interest_user_trigger before insert on `_user_preference_category_of_interest_user` for each row set @last_uuid=uuid(), NEW.category_of_interest_user_id=@last_uuid;
+
+create table `_user_preference_skills` ( \
+        `skills_id` varchar(36) NOT NULL, \
+        `name` TEXT NOT NULL, \
+        PRIMARY KEY(skills_id) \
+);
+create trigger _user_preference_skills_trigger before insert on `_user_preference_skills` for each row set @last_uuid=uuid(), NEW.skills_id=@last_uuid;
+
+create table `_user_preference_skills_user` ( \
+        `skills_user_id` varchar(36) NOT NULL, \
+        `skills_id` varchar(36) NOT NULL, \
+        `user_id` varchar(36) NOT NULL, \
+        PRIMARY KEY(skills_user_id) \
+);
+create trigger _user_preference_skills_user_trigger before insert on `_user_preference_skills_user` for each row set @last_uuid=uuid(), NEW.skills_user_id=@last_uuid;
+
+create table `_user_preference_stojo_utensils`( \
+        `stojo_utensils_id` varchar(36) NOT NULL, \
+        `name` TEXT NOT NULL, \
+        PRIMARY KEY(stojo_utensils_id) \
+);
+create trigger _user_preference_stojo_utensils_trigger before insert on `_user_preference_stojo_utensils` for each row set @last_uuid=uuid(), NEW.stojo_utensils_id=@last_uuid;
+
+create table `_user_preference_stojo_utensils_user`( \
+        `stojo_utensils_user_id` varchar(36) NOT NULL, \
+        `stojo_utensils_id` varchar(36) NOT NULL, \
+        `color` TEXT, \
+        `user_id` varchar(36) NOT NULL, \
+        PRIMARY KEY(stojo_utensils_user_id) \
+);
+create trigger _user_preference_stojo_utensils_user_trigger before insert on `_user_preference_stojo_utensils_user` for each row set @last_uuid=uuid(), NEW.stojo_utensils_user_id=@last_uuid;
+
+create table `_user_preference_workshops` ( \
+        `workshops_id` varchar(36) NOT NULL, \
+        `name` TEXT NOT NULL, \
+        PRIMARY KEY(workshops_id) \
+);
+create trigger _user_preference_workshops_trigger before insert on `_user_preference_workshops` for each row set @last_uuid=uuid(), NEW.workshops_id=@last_uuid;
+
+create table `_user_preference_workshops_user` ( \
+        `workshops_user_id` varchar(36) NOT NULL, \
+        `workshops_id` varchar(36) NOT NULL, \
+        `user_id` varchar(36) NOT NULL, \
+        PRIMARY KEY(workshops_user_id) \
+);
+create trigger _user_preference_workshops_user_trigger before insert on `_user_preference_workshops_user` for each row set @last_uuid=uuid(), NEW.workshops_user_id=@last_uuid;
