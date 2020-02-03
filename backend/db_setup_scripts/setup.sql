@@ -67,7 +67,7 @@ create trigger consumable_group_trigger before insert on `consumable_group` for 
 create table `group` ( \
         `group_id` varchar(36) NOT NULL, \
         `name` text NOT NULL, \
-        `space` text NOT NULL, \
+        `space` text, \
 	`hack_submitted` tinyint NOT NULL default 0, \
         PRIMARY KEY(group_id) \
 );
@@ -107,6 +107,14 @@ create table `category_group`( \
 );
 create trigger category_group_trigger before insert on `category_group` for each row set @last_uuid=uuid(), NEW.category_group_id=@last_uuid;
 
+create table `category_user`( \
+        `category_user_id` varchar(36) NOT NULL, \
+        `category_id` varchar(36) NOT NULL, \
+        `user_id` varchar(36) NOT NULL, \
+        PRIMARY KEY(category_user_id) \
+);
+create trigger category_user_trigger before insert on `category_user` for each row set @last_uuid=uuid(), NEW.category_user_id=@last_uuid;
+
 create table `score`( \
       	`score_id` varchar(36) NOT NULL, \
         `category_id` varchar(36) NOT NULL, \
@@ -131,21 +139,6 @@ create table `credentials`(
 	`username` TEXT NOT NULL, \
 	`password` varchar(256) NOT NULL \
 );
-
-create table `_user_preference_category_of_interest` ( \
-	`category_of_interest_id` varchar(36) NOT NULL, \
-	`name` TEXT NOT NULL, \
-	PRIMARY KEY(category_of_interest_id) \
-);
-create trigger _user_preference_category_of_interest_trigger before insert on `_user_preference_category_of_interest` for each row set @last_uuid=uuid(), NEW.category_of_interest_id=@last_uuid;
-
-create table `_user_preference_category_of_interest_user` ( \
-        `category_of_interest_user_id` varchar(36) NOT NULL, \
-        `category_of_interest_id` varchar(36) NOT NULL, \
-        `user_id` varchar(36) NOT NULL, \
-        PRIMARY KEY(category_of_interest_user_id) \
-);
-create trigger _user_preference_category_of_interest_user_trigger before insert on `_user_preference_category_of_interest_user` for each row set @last_uuid=uuid(), NEW.category_of_interest_user_id=@last_uuid;
 
 create table `_user_preference_technology_of_interest` ( \
         `technology_of_interest_id` varchar(36) NOT NULL, \
@@ -262,7 +255,7 @@ create trigger consumable_group_trigger before insert on `consumable_group` for 
 create table `group` ( \
         `group_id` varchar(36) NOT NULL, \
         `name` text NOT NULL, \
-        `space` text NOT NULL, \
+        `space` text, \
 	`hack_submitted` tinyint NOT NULL default 0, \
         PRIMARY KEY(group_id) \
 );
@@ -302,6 +295,14 @@ create table `category_group`( \
 );
 create trigger category_group_trigger before insert on `category_group` for each row set @last_uuid=uuid(), NEW.category_group_id=@last_uuid;
 
+create table `category_user`( \
+        `category_user_id` varchar(36) NOT NULL, \
+        `category_id` varchar(36) NOT NULL, \
+        `user_id` varchar(36) NOT NULL, \
+        PRIMARY KEY(category_user_id) \
+);
+create trigger category_user_trigger before insert on `category_user` for each row set @last_uuid=uuid(), NEW.category_user_id=@last_uuid;
+
 create table `score`( \
       	`score_id` varchar(36) NOT NULL, \
         `category_id` varchar(36) NOT NULL, \
@@ -326,21 +327,6 @@ create table `credentials`(
         `username` TEXT NOT NULL, \
         `password` varchar(256) NOT NULL \
 );
-
-create table `_user_preference_category_of_interest` ( \
-        `category_of_interest_id` varchar(36) NOT NULL, \
-        `name` TEXT NOT NULL, \
-        PRIMARY KEY(category_of_interest_id) \
-);
-create trigger _user_preference_category_of_interest_trigger before insert on `_user_preference_category_of_interest` for each row set @last_uuid=uuid(), NEW.category_of_interest_id=@last_uuid;
-
-create table `_user_preference_category_of_interest_user` ( \
-        `category_of_interest_user_id` varchar(36) NOT NULL, \
-        `category_of_interest_id` varchar(36) NOT NULL, \
-        `user_id` varchar(36) NOT NULL, \
-        PRIMARY KEY(category_of_interest_user_id) \
-);
-create trigger _user_preference_category_of_interest_user_trigger before insert on `_user_preference_category_of_interest_user` for each row set @last_uuid=uuid(), NEW.category_of_interest_user_id=@last_uuid;
 
 create table `_user_preference_technology_of_interest` ( \
         `technology_of_interest_id` varchar(36) NOT NULL, \
