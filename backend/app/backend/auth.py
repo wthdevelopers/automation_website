@@ -5,6 +5,10 @@ import hashlib, flask_login
 
 
 def _login():
+    """
+    Submit an existing username/password to be logged in
+    """
+
     username = request.json['username']
     connection = app.config["PYMYSQL_CONNECTION"]
 
@@ -25,6 +29,9 @@ def _login():
     return jsonify({"error": "Bad login"}), 400
 
 def _logout():
+    """
+    Log out your current session
+    """
     flask_login.logout_user()
     return jsonify({"success": "Logged out"}), 200
 

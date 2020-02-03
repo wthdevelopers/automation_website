@@ -4,6 +4,7 @@ SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 echo $SCRIPTPATH
 
 apt-get update
+apt update
 
 # installing dependencies for mysql
 apt-get install -y mysql-server
@@ -15,5 +16,8 @@ sudo -u xubuntu source "${SCRIPTPATH}/venvBackend/bin/activate"
 sudo -u xubuntu pip3 install -r "${SCRIPTPATH}/requirements.txt"
 sudo -u xubuntu deactivate
 
-# setup demo data in mysql
+# setup mysql
 "${SCRIPTPATH}/db_setup_scripts/setup.sh"
+
+# install Apache http server
+apt install apache2

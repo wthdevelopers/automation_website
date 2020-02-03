@@ -1,57 +1,76 @@
-from openpyxl import load_workbook
-import pymysql as pms
+"""
+Will continue after all endpoints are up
+"""
 
-import sys, os
+import csv, os
+
 dirname = os.path.dirname(__file__)
-sys.path.append(os.path.join(dirname, "../backend"))
-from config import Production, RemoteTest
+filename = os.path.join(dirname, './data.csv')
 
+index_dict = {
+    "solo_or_team": 5,
+    "solo": {
+        "user_name": 7,
+        "user_contact_number": 12,
+        "user_email": 11,
+        "user_DoB": 8,
+        "user_gender": 9,
+        "user_nationality": 10,
+        "user_organisation": 16,
+        "user_designation": 17,
+        "user_dietary_pref": 18,
+        "user_NoK_name": 28,
+        "user_NoK_relationship": 29,
+        "user_NoK_contact_number": 30,
+        "user_shirt_size": 19,
+        "user_previous_hackathons_attended": 20,
+        "user_bringing_utensils": 21,
+        "user_utensil_color": 23,
+        "user_category_of_interest": 13,
+        "user_technology_of_interest": 14,
+        "user_utensil_name": 22,
+        "user_skills": 15,
+        "user_workshop_repurpose": 24,
+        "user_workshop_fusion": 25,
+        "user_workshop_ESP32": 26,
+        "user_workshop_using": 27,
+        "consent": 31
+    },
+    "team": {
+        "user_name": 34,
+        "user_contact_number": 39,
+        "user_email": 38,
+        "user_DoB": 35,
+        "user_gender": 36,
+        "user_nationality": 37,
+        "user_organisation": 43,
+        "user_designation": 44,
+        "user_dietary_pref": 45,
+        "user_NoK_name": 55,
+        "user_NoK_relationship": 56,
+        "user_NoK_contact_number": 57,
+        "user_shirt_size": 46,
+        "user_previous_hackathons_attended": 47,
+        "user_bringing_utensils": 48,
+        "user_utensil_color": 50,
+        "user_category_of_interest": 40,
+        "user_technology_of_interest": 41,
+        "user_utensil_name": 49,
+        "user_skills": 42,
+        "user_workshop_repurpose": 51,
+        "user_workshop_fusion": 52,
+        "user_workshop_ESP32": 53,
+        "user_workshop_using": 54,
+        "group_name": 32,
+        "group_have_full_team": 33
+        "consent": 58
+    }
+}
 
-fname = 'test_data.xlsx'
-ENV = RemoteTest
+with open(filename, "r") as read_file:
+    spamreader = csv.reader(read_file, delimiter=',', quotechar='|')
 
-wb = load_workbook(filename=fname)
-participant_data = wb['Sheet1']
-headers = ('name',
-           'DoB',
-           'gender',
-           'nationality',
-           'email',
-           'contact_number',
-           'category_of_interest',
-           'technology_of_interest',
-           'skills',
-           'organisation',
-           'designation',
-           'dietary_pref',
-           'NoK_name',
-           'NoK_relationship',
-           'NoK_contact_number',
-           'participating',
-           'group_id')
-
-conn = pms.connect(host=ENV.HOST,
-                   user=ENV.USER,
-                   password=ENV.PW,
-                   db=ENV.DB_NAME)
-conn.autocommit(True)
-
-errors = []
-
-sql_insert_query_template = 'INSERT INTO `user` ({}) VALUES ({})'
-sql_cols = ','.join(['`{}`'.format(i) for i in headers])
-for i, row in enumerate(participant_data):
-    if i > 0:   # First row is headers
-        sql_values = tuple(cell.value for cell in row[5:]) + (False, None) # First 5 columns not necessary
-        sql_string_vals = ','.join('%s' for _ in sql_values)
-        sql_insert_query = sql_insert_query_template.format(sql_cols, sql_string_vals)
-        try:
-            with conn.cursor() as cursor:
-                cursor.execute(sql_insert_query, sql_values)
-            conn.commit()
-        except Exception as e:
-            errors.append(e)
-
-conn.close()
-print("errors: {0}".format(errors))
-
+    for row in spamreader:
+        for each_row in enumerate(row):
+            print(each_row)
+        exit(0)

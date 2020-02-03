@@ -1,0 +1,95 @@
+{
+    "team_allocation_preference": [
+        "soloist",
+        "forming team during hackathon", 
+        "already in a group"
+    ],
+    "gender": [
+        "Female", 
+        "Male", 
+        "Non-binary"
+    ],
+    "category": [
+        "Built Environment", 
+        "Waste Reduction", 
+        "Transportation", 
+        "Waste Management"
+    ],
+    "technology_of_interest": [
+        "Artificial Intelligence", 
+        "Software Platforms", 
+        "Internet of Things", 
+        "Computational Fabrication"
+    ], 
+    "skills": [
+        "Software", 
+        "Electronics", 
+        "Mechanical Hardware", 
+        "Design (graphics, video, etc.)", 
+        "Pitching"
+    ],
+    "dietary_pref": [
+        "Halal", 
+        "Vegetarian",
+        "None"
+    ],
+    "shirt_size": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+    ],
+    "previous_hackathons_attended": [
+        "0",
+        "1-3",
+        "4-6",
+        "7-9",
+        ">10"
+    ],
+    "bringing_utensils": [
+        "I have mine and I'll bring it!",
+        "I don't have a set and I'll buy my own before the hackathon",
+        "I don't have a set, but I am keen on purchasing it if it's sold at the hackathon",
+        "I don't have a set and I reaaaaaally don't wanna buy one..."
+    ],
+    "utensil_name": [
+        "Cutlery Set",
+        "Collapsible Cup",
+        "Collapsible Bowl",
+        "Stackable Bento Box",
+        "Stainless Steel Drinking Cup",
+        "Round Nesting Containers",
+        "Hemp Scrubs"
+    ],
+    "utensil_color": [
+        "Coral", 
+        "Peony", 
+        "Sage", 
+        "Steel", 
+        "Carbon", 
+        "Carnation", 
+        "Cashmere", 
+        "Denim", 
+        "Dove", 
+        "Indigo", 
+        "Ink", 
+        "Mint", 
+        "Rose", 
+        "Sky", 
+        "Slate"
+    ],
+    "workshop": [
+        "Repurposing Scrap Materials for Prototype Design",
+        "Fusion 360 Beginner Workshop",
+        "ESP32 Web Server & BLE",
+        "Using and Estimating Green Energy Sources"
+    ],
+    "NoK_relationship": [
+        "Parent", 
+        "Sibling", 
+        "Relative", 
+        "Guardian"
+    ]
+}

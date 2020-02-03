@@ -61,8 +61,6 @@ def create_app():
             # print("!!! user_loader used - username_not_in_db_state", file=sys.stderr)
             return
 
-        user = User()
-        user.id = username
         return user
 
 
