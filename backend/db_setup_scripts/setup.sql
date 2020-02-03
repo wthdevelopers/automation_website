@@ -17,6 +17,10 @@ GRANT ALL PRIVILEGES ON wthack_automation.* TO 'remote'@'%' IDENTIFIED BY 'passw
 GRANT ALL PRIVILEGES ON wthack_automation_test.* TO 'remote'@'%' IDENTIFIED BY 'password';
 FLUSH PRIVILEGES;
 
+-- alter databases to accomodate with utf8 instead of the default latin1 character set
+ALTER DATABASE wthack_automation CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER DATABASE wthack_automation_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- create and fill up tables for wthack_automation
 use wthack_automation;
 create table `user` ( \
