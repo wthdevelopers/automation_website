@@ -13,7 +13,7 @@ def create_app():
     app = Flask(__name__, instance_relative_config=False)
 
     # add config values
-    flask_env = os.environ["FLASK_ENV"]
+    flask_env = os.environ.get("FLASK_ENV", "RemoteTest")
     if flask_env == "Production":
         app.config.from_object('config.Production')
     elif flask_env == "RemoteTest":
