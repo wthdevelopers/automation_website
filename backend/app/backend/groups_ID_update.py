@@ -9,7 +9,7 @@ jsondir = os.path.join(filedir, '../../../insert_userdata/preference_categories_
 with open(jsondir, "r") as read_file:
     schema = json.loads(read_file.read())
 
-# @flask_login.login_required
+@flask_login.login_required
 def _groups_ID_update(id):
     """
     Updates all column values of group

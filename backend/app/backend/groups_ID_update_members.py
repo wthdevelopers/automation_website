@@ -3,7 +3,7 @@ from flask import jsonify, request
 import flask_login
 
 
-# @flask_login.login_required
+@flask_login.login_required
 def _groups_ID_update_members(id):
     """
     Updates the team members in a group. If group no longer has any team members, group is deleted. Check that user inserted does not belong in another group.
