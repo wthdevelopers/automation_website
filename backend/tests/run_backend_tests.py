@@ -11,7 +11,7 @@ filename = os.path.join(dirname, '../')
 sys.path.insert(0, filename)
 from config import RemoteTest
 
-BACKEND_URL = "http://127.0.0.1:5000"
+BACKEND_URL = "http://172.21.21.66:80"
 PyMySQL = pymysql.connect(
     host=RemoteTest.HOST,
     user=RemoteTest.USER,
@@ -191,10 +191,9 @@ if before_login_response == "HELLO WORLD" and after_login_response == "Unauthori
     pass_count += 1
     test_count += 1
 else:
-    print("response: \n{0}".format(query_result))
-    print("to_compare: \n{0}".format(to_compare))
+    print("correct output: HELLO WORLD; before_login_response: {0}".format(before_login_response))
+    print("correct output: Unauthorized; after_login_response: {0}".format(after_login_response))
     print("authorization - positive test")
-    index_of_string_difference(query_result, to_compare)
     test_count += 1
 
 response = login_session.post(BACKEND_URL+"/login", json=request_body).content.decode("utf-8")  # login for the rest of the endpoints

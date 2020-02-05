@@ -3,7 +3,7 @@ from flask import jsonify, request
 import flask_login
 
 
-# @flask_login.login_required
+@flask_login.login_required
 def _groups_ID_alldata(id):
     """
     Returns all column data, including all categories it is in

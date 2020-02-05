@@ -1,0 +1,13 @@
+[Unit]
+Description=uWSGI instance to serve backend
+After=network.target
+
+[Service]
+User=xubuntu
+Group=www-data
+WorkingDirectory=/home/xubuntu/Desktop/automation_website/backend
+Environment="PATH=/home/xubuntu/Desktop/automation_website/backend/venvBackend/bin"
+ExecStart=/home/xubuntu/Desktop/automation_website/backend/venvBackend/bin/uwsgi --ini backend.ini
+
+[Install]
+WantedBy=multi-user.target

@@ -13,7 +13,7 @@ with open(jsondir, "r") as read_file:
     schema = json.loads(read_file.read())
 
 
-# @flask_login.login_required
+@flask_login.login_required
 def _participants_ID_update(id):
     """
     Updates the particulars of an existing participant

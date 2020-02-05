@@ -3,7 +3,7 @@ from flask import jsonify, request
 import flask_login
 
 
-# @flask_login.login_required
+@flask_login.login_required
 def _groups_ID_submit(group_id):
     """
     Registers that the group has submitted a hack

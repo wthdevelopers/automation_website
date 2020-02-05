@@ -3,7 +3,7 @@ from flask import jsonify, request
 import flask_login
 
 
-# @flask_login.login_required
+@flask_login.login_required
 def _participants_ID_group(id):
     """
     Returns whether the participant exist, and whether it belongs in an existing group already
