@@ -48,26 +48,6 @@ create table `user` ( \
 );
 create trigger user_trigger before insert on `user` for each row set @last_uuid=uuid(), NEW.user_id=@last_uuid;
 
-create table `consumable` ( \
-        `consumable_id` varchar(36) NOT NULL, \
-        `name` TEXT NOT NULL, \
-        `description` TEXT, \
-        `stock_qty` INT NOT NULL, \
-        `total_qty` INT NOT NULL, \
-        `quota_per_group` INT NOT NULL, \
-        PRIMARY KEY(consumable_id) \
-);
-create trigger consumable_trigger before insert on `consumable` for each row set @last_uuid=uuid(), NEW.consumable_id=@last_uuid;
-
-create table `consumable_group` ( \
-        `consumable_group_id` varchar(36) NOT NULL, \
-        `group_id` varchar(36) NOT NULL, \
-        `consumable_id` varchar(36) NOT NULL, \
-        `qty` INT NOT NULL, \
-        PRIMARY KEY(consumable_group_id) \
-);
-create trigger consumable_group_trigger before insert on `consumable_group` for each row set @last_uuid=uuid(), NEW.consumable_group_id=@last_uuid;
-
 create table `group` ( \
         `group_id` varchar(36) NOT NULL, \
         `name` text NOT NULL, \
@@ -118,6 +98,14 @@ create table `category_user`( \
         PRIMARY KEY(category_user_id) \
 );
 create trigger category_user_trigger before insert on `category_user` for each row set @last_uuid=uuid(), NEW.category_user_id=@last_uuid;
+
+create table `category_judge`( \
+        `category_judge_id` varchar(36) NOT NULL, \
+        `category_id` varchar(36) NOT NULL, \
+        `judge_id` varchar(36) NOT NULL, \
+        PRIMARY KEY(category_judge_id) \
+);
+create trigger category_judge_trigger before insert on `category_judge` for each row set @last_uuid=uuid(), NEW.category_judge_id=@last_uuid;
 
 create table `score`( \
       	`score_id` varchar(36) NOT NULL, \
@@ -236,26 +224,6 @@ create table `user` ( \
 
 create trigger user_trigger before insert on `user` for each row set @last_uuid=uuid(), NEW.user_id=@last_uuid;
 
-create table `consumable` ( \
-        `consumable_id` varchar(36) NOT NULL, \
-        `name` TEXT NOT NULL, \
-        `description` TEXT, \
-        `stock_qty` INT NOT NULL, \
-        `total_qty` INT NOT NULL, \
-        `quota_per_group` INT NOT NULL, \
-        PRIMARY KEY(consumable_id) \
-);
-create trigger consumable_trigger before insert on `consumable` for each row set @last_uuid=uuid(), NEW.consumable_id=@last_uuid;
-
-create table `consumable_group` ( \
-        `consumable_group_id` varchar(36) NOT NULL, \
-        `group_id` varchar(36) NOT NULL, \
-        `consumable_id` varchar(36) NOT NULL, \
-        `qty` INT NOT NULL, \
-        PRIMARY KEY(consumable_group_id) \
-);
-create trigger consumable_group_trigger before insert on `consumable_group` for each row set @last_uuid=uuid(), NEW.consumable_group_id=@last_uuid;
-
 create table `group` ( \
         `group_id` varchar(36) NOT NULL, \
         `name` text NOT NULL, \
@@ -306,6 +274,14 @@ create table `category_user`( \
         PRIMARY KEY(category_user_id) \
 );
 create trigger category_user_trigger before insert on `category_user` for each row set @last_uuid=uuid(), NEW.category_user_id=@last_uuid;
+
+create table `category_judge`( \
+        `category_judge_id` varchar(36) NOT NULL, \
+        `category_id` varchar(36) NOT NULL, \
+        `judge_id` varchar(36) NOT NULL, \
+        PRIMARY KEY(category_judge_id) \
+);
+create trigger category_judge_trigger before insert on `category_judge` for each row set @last_uuid=uuid(), NEW.category_judge_id=@last_uuid;
 
 create table `score`( \
       	`score_id` varchar(36) NOT NULL, \
