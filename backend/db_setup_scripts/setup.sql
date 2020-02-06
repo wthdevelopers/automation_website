@@ -44,6 +44,7 @@ create table `user` ( \
 	`bringing_utensils` TEXT NOT NULL, \
 	`team_allocation_preference` TEXT NOT NULL, \
 	`utensil_color` TEXT, \
+	`given_cash` tinyint NOT NULL default 0, \
         PRIMARY KEY(user_id) \
 );
 create trigger user_trigger before insert on `user` for each row set @last_uuid=uuid(), NEW.user_id=@last_uuid;
@@ -108,14 +109,15 @@ create table `category_judge`( \
 create trigger category_judge_trigger before insert on `category_judge` for each row set @last_uuid=uuid(), NEW.category_judge_id=@last_uuid;
 
 create table `score`( \
-      	`score_id` varchar(36) NOT NULL, \
+        `score_id` varchar(36) NOT NULL, \
         `category_id` varchar(36) NOT NULL, \
-      	`judge_id` varchar(36) NOT NULL, \
+        `judge_id` varchar(36) NOT NULL, \
         `group_id` varchar(36) NOT NULL, \
-      	`category_1_score` INT NOT NULL, \
-      	`category_2_score` INT NOT NULL, \
-      	`category_3_score` INT NOT NULL, \
-      	`category_4_score` INT NOT NULL, \
+        `category_1_score` INT NOT NULL, \
+        `category_2_score` INT NOT NULL, \
+        `category_3_score` INT NOT NULL, \
+        `category_4_score` INT NOT NULL, \
+        `notes_filepath` TEXT, \
         PRIMARY KEY(score_id) \
 );
 -- score will not have a trigger. it relies on an external file's input and hence will retain the score_id from that file
@@ -219,6 +221,7 @@ create table `user` ( \
         `bringing_utensils` TEXT NOT NULL, \
         `team_allocation_preference` TEXT NOT NULL, \
         `utensil_color` TEXT, \
+	`given_cash` tinyint NOT NULL default 0, \
         PRIMARY KEY(user_id) \
 );
 
@@ -292,6 +295,7 @@ create table `score`( \
       	`category_2_score` INT NOT NULL, \
       	`category_3_score` INT NOT NULL, \
       	`category_4_score` INT NOT NULL, \
+	`notes_filepath` TEXT, \
         PRIMARY KEY(score_id) \
 );
 -- score will not have a trigger. it relies on an external file's input and hence will retain the score_id from that file
