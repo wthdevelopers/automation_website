@@ -1,6 +1,6 @@
 from flask import current_app as app
 from flask import jsonify, request
-import flask_login
+import flask_login, pymysql
 
 
 @flask_login.login_required
@@ -19,6 +19,7 @@ def _groups_get_all():
     with connection.cursor() as cursor:
         cursor.execute(query)
         query_result = cursor.fetchall()
+        cursor.close()
 
     # format output
     output = {"groups_get_all": [], "_groups_count": 0}

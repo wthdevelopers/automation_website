@@ -1,6 +1,6 @@
 from flask import current_app as app
 from flask import jsonify, request, session
-import flask_login
+import flask_login, pymysql
 
 
 @flask_login.login_required
@@ -17,6 +17,7 @@ def _participants_get_all():
     with connection.cursor() as cursor:
         cursor.execute(query)
         query_result = cursor.fetchall()
+        cursor.close()
 
     output = {"participants_all": [], "_participants_count": 0}
     for each_user in query_result:

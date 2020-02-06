@@ -56,24 +56,42 @@ Frontend:
     - include the ability to change categories that a group is registered in
     - remove hack_submitted
     - ensure ID of category exist in categories table before meeting request
-
-  - EDIT endpoint group/create 
+  - DONE add new table category_judge
+  - DONE no consumables feature
+    - REMOVE ENDPOINT /consumables/get_all
+    - REMOVE ENDPOINT /consumables/ID/return/ID/COUNT
+    - REMOVE ENDPOINT /consumables/ID/take/ID/COUNT
+    - REMOVE ENDPOINT /consumables/ID/update
+    - REMOVE TABLE consumable, consumable_group
+  - DONE NEW ENDPOINT /tools/get_all
+    - Retrieves all attributes of the particular tool
+    - get tools we return tool_id cos the organisers need it
+  - DONE add notes_filepath to db table score datatype TEXT to store the path where the judges' notes will be stored
+  - DONE add given_cash attribute to db table user
+  - DONE NEW ENDPOINT /particiapnts/ID/given_cash
+    - add new column to note if user has been given vouchers for meals (one time thing)
+    - Changes the value of the column given_cash of db table user to 1
+  - DONE NEW ENDPOINT /participants/ID/ungiven_cash
+    - Changes the value of the column given_cash of db table user to 0
+  - DONE EDIT endpoint group/create 
     - add ability to register participants to the group
-    - check that consumables.quota_per_group * number_of_groups <= consumables.total_qty
-  - EDIT endpoint participants/deregister - remove from group
-  - EDIT consumables/ID/take/ID/COUNT
-    - add new consumables_group if row does not exist
-  - EDIT endpoint groups/ID/alldata
-    - include user id of members in group
-  - NEW FEATURE Function required to populate tools and consumables
-  - Ensure that empty strings are returned for all null values
-  - ensure all updates only update column if its included in request body
+  - DONE EDIT endpoint participants/deregister
+    - remove participants from group
+  - DONE EDIT endpoint groups/ID/alldata
+    - include user id and name of members in group
+  - DONE NEW FEATURE Function required to populate tools
+  - DONE Ensure that empty strings are returned for all null values
+  - DONE Ensure that all string inputs into mysql queries are escaped
+  - DONE ensure all updates only update column if its included in request body
+  - DONE add new column to db table group utensils_returned: not null, default value 0
+  - DONE NEW ENDPOINT /groups/ID/utensils_returned
+    - changes the column value utensils_returned of db table group to 1
+  - DONE NEW ENDPOINT /groups/ID/utensils_loaned
+    - changes the column value utensils_returned of db table group to 0
 
-  - EDIT existing functions to input user values into db
   - NEW checks - /participants/ID/update
     - check if participant ID exists
     - DONE check if the IDs in each category (e.g. category_of_interest, technology_of_interest, skills, etc.) exist
-  - NEW checks - consumables/ID/return/ID/COUNT - return error if consumables_group row does not exist
   - NEW checks - /participants/ID/register 
     - check if participant ID exists
   - NEW checks - /participants/ID/deregister 
@@ -83,8 +101,7 @@ Frontend:
     - check that participants are not in >=2 groups
   - NEW checks - /loans/ID/loan/ID - ensure tool is not loaned by anyone before meeting this request
   - NEW checks - /loans/ID/return/ID - ensure tool is loaned by someone before meeting this request
-  - Test and update code in insert_userdata/ to ensure no inputs are lost
-- Add another column into the score table - filepaths for judge notes
+- updated schema for "team_allocation_preference", tally tests and endpoints
 - 2.0
   - DONE endpoint "functions/find_participants" to be removed
   - DONE Remove all event endpoints, and function/upcoming_events (seds)

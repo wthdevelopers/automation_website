@@ -1,6 +1,6 @@
 from flask import current_app as app
 from flask import jsonify, request
-import flask_login
+import flask_login, pymysql
 
 
 @flask_login.login_required
@@ -34,10 +34,11 @@ def _participants_ID_alldata(id):
             user.bringing_utensils, \
             user.team_allocation_preference, \
             user.utensil_color \
-        FROM user WHERE user_id='{0}'".format(id)
+        FROM user WHERE user_id='{0}'".format(pymysql.escape_string(id))
     with connection.cursor() as cursor:
         cursor.execute(query)
         user_data = cursor.fetchall()
+        cursor.close()
 
     output = user_data[0]
 
@@ -48,10 +49,11 @@ def _participants_ID_alldata(id):
         INNER JOIN competition_category \
             ON category_user.category_id=competition_category.category_id \
         WHERE \
-            user.user_id='{0}'".format(id)
+            user.user_id='{0}'".format(pymysql.escape_string(id))
     with connection.cursor() as cursor:
         cursor.execute(query)
         query_result = cursor.fetchall()
+        cursor.close()
     
     output["category_of_interest"] = []
     for each_category in query_result:
@@ -64,10 +66,11 @@ def _participants_ID_alldata(id):
         INNER JOIN _user_preference_technology_of_interest \
             ON _user_preference_technology_of_interest_user.technology_of_interest_id=_user_preference_technology_of_interest.technology_of_interest_id \
         WHERE \
-            user.user_id='{0}'".format(id)
+            user.user_id='{0}'".format(pymysql.escape_string(id))
     with connection.cursor() as cursor:
         cursor.execute(query)
         query_result = cursor.fetchall()
+        cursor.close()
     
     output["technology_of_interest"] = []
     for each_category in query_result:
@@ -80,10 +83,11 @@ def _participants_ID_alldata(id):
         LEFT JOIN _user_preference_skills \
             ON _user_preference_skills_user.skills_id=_user_preference_skills.skills_id \
         WHERE \
-            user.user_id='{0}'".format(id)
+            user.user_id='{0}'".format(pymysql.escape_string(id))
     with connection.cursor() as cursor:
         cursor.execute(query)
         query_result = cursor.fetchall()
+        cursor.close()
 
     output["skills"] = {"default_skills": [], "other_skills": []}
     for each_skill in query_result:
@@ -101,10 +105,11 @@ def _participants_ID_alldata(id):
         INNER JOIN _user_preference_utensil_name \
             ON _user_preference_utensil_name_user.utensil_name_id=_user_preference_utensil_name.utensil_name_id \
         WHERE \
-            user.user_id='{0}'".format(id)
+            user.user_id='{0}'".format(pymysql.escape_string(id))
     with connection.cursor() as cursor:
         cursor.execute(query)
         query_result = cursor.fetchall()
+        cursor.close()
 
     output["utensil_name"] = []
     for each_utensil in query_result:
@@ -117,10 +122,11 @@ def _participants_ID_alldata(id):
             INNER JOIN _user_preference_workshops \
                 ON _user_preference_workshops_user.workshops_id=_user_preference_workshops.workshops_id \
             WHERE \
-                user.user_id='{0}'".format(id)
+                user.user_id='{0}'".format(pymysql.escape_string(id))
     with connection.cursor() as cursor:
         cursor.execute(query)
         query_result = cursor.fetchall()
+        cursor.close()
 
     output["workshop"] = []
     for each_workshop in query_result:

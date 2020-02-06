@@ -27,11 +27,11 @@ def _groups_ID_update(id):
         query = "UPDATE `group` SET "
         for each_attribute in attributes_list:
             if each_attribute[1]:
-                query += "{0}='{1}', ".format(each_attribute[0], each_attribute[1])
-        query = query[:-2] + " WHERE group_id='{0}'".format(id)
-        print("query: {0}".format(query))
+                query += "{0}='{1}', ".format(each_attribute[0], pymysql.escape_string(each_attribute[1]))
+        query = query[:-2] + " WHERE group_id='{0}'".format(pymysql.escape_string(id))
         with connection.cursor() as cursor:
             cursor.execute(query)
+            cursor.close()
     
     if category:
         for each_category in category:
@@ -39,9 +39,10 @@ def _groups_ID_update(id):
                 return jsonify({"error": "Value of key category did not obey schema"})
         
         # remove old values
-        query = "DELETE FROM category_group WHERE group_id='{0}';".format(id)
+        query = "DELETE FROM category_group WHERE group_id='{0}';".format(pymysql.escape_string(id))
         with connection.cursor() as cursor:
             cursor.execute(query)
+            cursor.close()
 
         # retrieve ids of the values that we'll be inserting
         category_ids = []
@@ -50,12 +51,14 @@ def _groups_ID_update(id):
             with connection.cursor() as cursor:
                 cursor.execute(query)
                 category_ids.append(cursor.fetchall()[0]["category_id"])
+                cursor.close()
         
         # insert new values
         for each_category_index in range(len(category)):
-            query = "INSERT INTO category_group (category_id, group_id) VALUES ('{0}', '{1}');".format(category_ids[each_category_index], id)
+            query = "INSERT INTO category_group (category_id, group_id) VALUES ('{0}', '{1}');".format(pymysql.escape_string(category_ids[each_category_index]), pymysql.escape_string(id))
             with connection.cursor() as cursor:
                 cursor.execute(query)
+                cursor.close()
 
 
     return jsonify({"success": "ok"}), 200
