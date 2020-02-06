@@ -66,7 +66,8 @@ create table `tool` ( \
 	`latest_loan` varchar(36), \
         PRIMARY KEY(tool_id) \
 );
-create trigger tool_trigger before insert on `tool` for each row set @last_uuid=uuid(), NEW.tool_id=@last_uuid;
+-- create trigger tool_trigger before insert on `tool` for each row set @last_uuid=uuid(), NEW.tool_id=@last_uuid;
+-- note: tool has custom ids
 
 create table `loan` ( \
 	`loan_id` varchar(36) NOT NULL, \
@@ -244,7 +245,8 @@ create table `tool` ( \
 	`latest_loan` varchar(36), \
         PRIMARY KEY(tool_id) \
 );
-create trigger tool_trigger before insert on `tool` for each row set @last_uuid=uuid(), NEW.tool_id=@last_uuid;
+-- create trigger tool_trigger before insert on `tool` for each row set @last_uuid=uuid(), NEW.tool_id=@last_uuid;
+-- note: tool has custom ids
 
 create table `loan` ( \
 	`loan_id` varchar(36) NOT NULL, \
