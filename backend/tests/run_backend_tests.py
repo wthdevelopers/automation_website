@@ -312,7 +312,7 @@ with PyMySQL.cursor() as cursor:
     new_user2_id = cursor.fetchall()[0]["@last_uuid"]
 
 response = login_session.get(BACKEND_URL+"/participants/get_all").content.decode("utf-8")
-to_compare = '{{"_participants_count":2,"participants_all":[{{"id":"{0}","name":"user 1","registered":0}},{{"id":"{1}","name":"user 2","registered":1}}]}}\n'.format(new_user1_id, new_user2_id)
+to_compare = '{{"_participants_count":2,"participants_all":[{{"given_cash":0,"id":"{0}","name":"user 1","registered":0}},{{"given_cash":0,"id":"{1}","name":"user 2","registered":1}}]}}\n'.format(new_user1_id, new_user2_id)
 
 if response == to_compare:
     pass_count += 1

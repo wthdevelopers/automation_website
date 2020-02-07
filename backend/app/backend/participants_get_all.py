@@ -13,7 +13,7 @@ def _participants_get_all():
     
     # retrieve group id
     participant_id = request.args.get("participant_id")
-    query = "SELECT user_id as id, name, registered FROM user"
+    query = "SELECT user_id as id, name, registered, given_cash FROM user"
     with connection.cursor() as cursor:
         cursor.execute(query)
         query_result = cursor.fetchall()
@@ -24,7 +24,8 @@ def _participants_get_all():
         output["participants_all"].append({
             "id": each_user["id"],
             "name": each_user["name"],
-            "registered": each_user["registered"]
+            "registered": each_user["registered"],
+            "given_cash": each_user["given_cash"]
         })
         output["_participants_count"] += 1
 

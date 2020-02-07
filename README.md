@@ -88,6 +88,7 @@ Frontend:
     - changes the column value utensils_returned of db table group to 1
   - DONE NEW ENDPOINT /groups/ID/utensils_loaned
     - changes the column value utensils_returned of db table group to 0
+  - EDIT endpoint /participants/get_all now returns given_cash
 
   - NEW checks - /participants/ID/update
     - check if participant ID exists
