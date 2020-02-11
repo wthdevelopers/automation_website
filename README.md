@@ -1,6 +1,6 @@
 # WTHack-Automation website v3.0
 ### About
-Backend flask server that implement some workflows (that are previously manually done) required to plan/execute WTHack 2020. Unfortunately due to the DOSCORN level elevating to ORANGE in 8/2/2020 due to the nCov outbreak, the backend server didn't make it into actual usage :(. These records and documentation are made in hopes that it could still be helpful to future iterations of the event.
+Backend flask server that implement some workflows (that are previously manually done) required to plan/execute WTHack 2020. Unfortunately due to the DOSCORN level elevating to ORANGE in 8/2/2020 due to the nCov outbreak, the event had to be cancelled prematurely, and the backend server didn't make it into actual usage :(. These records and documentation are made in hopes that it could still be helpful to future iterations of the event.
 
 The server provides a set of APIs that allows organising members to:
 - View and edit user information
@@ -10,8 +10,6 @@ The server provides a set of APIs that allows organising members to:
 - Records the loan statuses of all tools
 - Creates new entries of loans/returns of exisiting tools
 - User authentication before accessing such endpoints
-
-Additional
 
 User Stories for this project:
 https://docs.google.com/spreadsheets/d/1JzmQu9a42cI74bXLm_B3bhEId0I011isfi3b1agZ-RU/edit?usp=sharing
