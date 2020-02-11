@@ -1,6 +1,17 @@
-# WTHack-Automation website v2.0
+# WTHack-Automation website v3.0
+### About
+Backend flask server that implement some workflows (that are previously manually done) required to plan/execute WTHack 2020
 
-A website that automates some workflows required to plan/execute WTHack 2020
+The server provides a set of APIs that allows organising members to:
+- View and edit user information
+- Records the registration of members and whether they've been given cash vouchers for meals
+- View, create, and edit groups and their information
+- Records whether the groups have returned loaned utensils or not, and whether they've submitted their hacks
+- Records the loan statuses of all tools
+- Creates new entries of loans/returns of exisiting tools
+- User authentication before accessing such endpoints
+
+Additional
 
 User Stories for this project:
 https://docs.google.com/spreadsheets/d/1JzmQu9a42cI74bXLm_B3bhEId0I011isfi3b1agZ-RU/edit?usp=sharing
@@ -17,6 +28,29 @@ Frontend:
 - Designs for the frontend: 
   https://www.figma.com/file/LEd18NNjUkfn9yDlok3U8g/OComm-Front-End?node-id=0%3A1
 
+### Setup
+1. Set up the MySQL server in an instance with a public IP address by running ```sudo ./backend/setup.sh``` in that instance.
+2. Copy backend/config_template.py into backend/config.py
+3. Replace the values of each attribute of the classes
+  - USER - Username used to access the MySQL database. Default value is "remote".
+  - PW - Password used to access the MySQL database. Set this to the password you provided when setting up the MySQL database. Default value is "password".
+  - HOST - The public IP address where the MySQL database is set up.
+  - DB_NAME - The name of the database in the MySQL server. Default value is "wthack_automation".
+  - PW_SALT - The salt used to salt the password used for authentication. Default value is "salt"
+4. Insert credentials for logging into the flask server with ```./insert_backend_password/add_cred.py```
+5. Populate tables with your custom scripts, or the ones available (insert_tools/, insert_userdata/, insert_judge_score/)
+6. Set up complete. To run backend server, edit FLASK_ENV in backend/run_app.sh to either "RemoveTest" or "Production" depending on the config values you'd like to use. Finally, run ```./backend/run_app.sh```
+
+### Run tests
+1. Assuming that set up has been complete up to step 4, run ```./backend/tests/run_app_test.sh```
+2. In the same instance, activate the python virtual environment with ```source ./backend/venvBackend/bin/activate```
+3. Set the username and password to what you've configured in backend/tests/run_backend_tests.py
+4. Run ```python3 ./backend/tests/run_backend_tests.py```
+5. To exit the virtual environment, run ```deactivate```
+
+### Existing functions
+1. /insert_judge_score reads csv files of scores and judge values and input into the MySQL server
+2. /retrieve_group_category outputs group, competition_category, and category_group table values into separate csv files
 
 ### Version history
 - 3.0
@@ -89,20 +123,6 @@ Frontend:
   - DONE NEW ENDPOINT /groups/ID/utensils_loaned
     - changes the column value utensils_returned of db table group to 0
   - EDIT endpoint /participants/get_all now returns given_cash
-
-  - NEW checks - /participants/ID/update
-    - check if participant ID exists
-    - DONE check if the IDs in each category (e.g. category_of_interest, technology_of_interest, skills, etc.) exist
-  - NEW checks - /participants/ID/register 
-    - check if participant ID exists
-  - NEW checks - /participants/ID/deregister 
-    - check if participant ID exists
-  - NEW checks - /groups/ID/update - check for valid input
-  - NEW checks - /groups/create - check for valid input
-    - check that participants are not in >=2 groups
-  - NEW checks - /loans/ID/loan/ID - ensure tool is not loaned by anyone before meeting this request
-  - NEW checks - /loans/ID/return/ID - ensure tool is loaned by someone before meeting this request
-- updated schema for "team_allocation_preference", tally tests and endpoints
 - 2.0
   - DONE endpoint "functions/find_participants" to be removed
   - DONE Remove all event endpoints, and function/upcoming_events (seds)
@@ -162,3 +182,7 @@ Frontend:
   - Change operations on the resource "events"  to be on events for participants instead of the upcoming duty roster activities for ocomm members
   - Removed /ocomm/get_all
   - Update keys of response json to correspond to the name of the endpoint
+
+### Misc
+Credits: SolsticeDante
+Drop me an issue for any queries.

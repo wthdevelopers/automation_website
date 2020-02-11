@@ -4,7 +4,6 @@ class Production:
     HOST = "some value"
     DB_NAME = "some value"
 
-    SECRET_KEY = "some value"
     PW_SALT = "some value"
 
 
@@ -14,5 +13,4 @@ class RemoteTest:
     HOST = "some value"
     DB_NAME = "some value"
 
-    SECRET_KEY = "some value"
     PW_SALT = "some value"
