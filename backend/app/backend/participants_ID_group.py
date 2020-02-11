@@ -1,6 +1,6 @@
 from flask import current_app as app
 from flask import jsonify, request
-import flask_login
+import flask_login, pymysql
 
 
 @flask_login.login_required
@@ -10,11 +10,12 @@ def _participants_ID_group(id):
     """
     connection = app.config["PYMYSQL_CONNECTION"]
 
-    query = "SELECT group_id FROM user WHERE user_id='{0}'".format(id)
+    query = "SELECT group_id FROM user WHERE user_id='{0}'".format(pymysql.escape_string(id))
     # submit query and retrieve values
     with connection.cursor() as cursor:
         cursor.execute(query)
         query_result = cursor.fetchall()
+        cursor.close()
 
     output = {"user_exist": 0,"group_id": None}
     print("query_result: {0}".format(query_result))

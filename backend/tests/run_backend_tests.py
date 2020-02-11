@@ -11,7 +11,7 @@ filename = os.path.join(dirname, '../')
 sys.path.insert(0, filename)
 from config import RemoteTest
 
-BACKEND_URL = "http://172.21.21.66:80"
+BACKEND_URL = "http://127.0.0.1:5000"
 PyMySQL = pymysql.connect(
     host=RemoteTest.HOST,
     user=RemoteTest.USER,
@@ -45,7 +45,8 @@ insert_default_user_query = "INSERT INTO user (name, \
     previous_hackathons_attended, \
     bringing_utensils, \
     team_allocation_preference, \
-    utensil_color) \
+    utensil_color, \
+    given_cash) \
 VALUES ('user 1', \
     '91234567', \
     'test.email.com', \
@@ -64,7 +65,8 @@ VALUES ('user 1', \
     '0', \
     'I have mine and I\\'ll bring it!', \
     'soloist', \
-    'Coral')"
+    'Coral', \
+    0)"
 
 insert_alt_user_query = "INSERT INTO user (name, \
     contact_number, \
@@ -84,7 +86,8 @@ insert_alt_user_query = "INSERT INTO user (name, \
     previous_hackathons_attended, \
     bringing_utensils, \
     team_allocation_preference, \
-    utensil_color) \
+    utensil_color, \
+    given_cash) \
 VALUES ('user 2', \
     '91234568', \
     'test1.email.com', \
@@ -102,8 +105,15 @@ VALUES ('user 2', \
     'L', \
     '1-3', \
     'I don\\'t have a set and I\\'ll buy my own before the hackathon', \
-    'forming team during hackathon', \
-    'color 2')"
+    'No, I want to form my own team at the Hackathon', \
+    'color 2', \
+    0)"
+
+insert_default_group_query_1 = "INSERT INTO `group` (name, space, hack_submitted) VALUES ('name 1', 'space 1', 0)"
+insert_default_group_query_2 = "INSERT INTO `group` (name, space, hack_submitted) VALUES ('name 2', 'space 2', 0)"
+
+insert_default_tool_query_1 = "INSERT INTO `tool` (tool_id, loaned, name) VALUES ('1', '1', 'tool name 1');"
+insert_default_tool_query_2 = "INSERT INTO `tool` (tool_id, loaned, name) VALUES ('2', '0', 'tool name 2');"
 
 def clean_all_tables():
     """
@@ -121,8 +131,6 @@ def clean_all_tables():
         cursor.execute("DELETE FROM _user_preference_workshops_user")
         cursor.execute("DELETE FROM category_group")
         cursor.execute("DELETE FROM competition_category")
-        cursor.execute("DELETE FROM consumable")
-        cursor.execute("DELETE FROM consumable_group")
         cursor.execute("DELETE FROM `group`")
         cursor.execute("DELETE FROM judge")
         cursor.execute("DELETE FROM loan")
@@ -217,7 +225,8 @@ if query_result[0]["registered"] == to_compare:
     test_count += 1
 else:
     print("test failed: /participants/register - positive test")
-    index_of_string_difference(query_result[0]["registered"], to_compare)
+    print("response: \n{0}".format(query_result[0]["registered"]))
+    print("to_compare: \n{0}".format(to_compare))
     test_count += 1
 
 clean_all_tables()
@@ -233,50 +242,49 @@ with PyMySQL.cursor() as cursor:
 response = login_session.put(BACKEND_URL+"/participants/{0}/deregister".format(new_user_id)).content.decode("utf-8")
 
 with PyMySQL.cursor() as cursor:
-    cursor.execute("SELECT registered FROM user WHERE user_id='{0}'".format(new_user_id))
-    query_result = cursor.fetchall()
+    cursor.execute("SELECT registered, group_id FROM user WHERE user_id='{0}'".format(new_user_id))
+    query_result = str(cursor.fetchall())
 
-to_compare = 0
-if query_result[0]["registered"] == to_compare:
+to_compare = "[{'registered': 0, 'group_id': None}]"
+if query_result == to_compare:
     pass_count += 1
     test_count += 1
 else:
     print("test failed: /participants/ID/deregister - positive test")
-    index_of_string_difference(response, to_compare)
+    print("response: \n{0}".format(response))
+    print("to_compare: \n{0}".format(to_compare))
+    index_of_string_difference(query_result, to_compare)
     test_count += 1
 
 clean_all_tables()
 
 
 
-### /loans/get_all - positive test
+### /tools/get_all - positive test
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO `group` (name, space) VALUES ('name 1', 'space 1')")
+    cursor.execute(insert_default_group_query_1)
     cursor.execute("SELECT @last_uuid;")
     new_group_id = cursor.fetchall()[0]["@last_uuid"]
 
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO `tool` (loaned, name) VALUES ('1', 'tool name 1');".format(new_user_id))
-    cursor.execute("SELECT @last_uuid;")
-    new_tool1_id = cursor.fetchall()[0]["@last_uuid"]
+    cursor.execute(insert_default_tool_query_1)
 
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO `tool` (loaned, name) VALUES ('0', 'tool name 2');".format(new_user_id))
-    cursor.execute("SELECT @last_uuid;")
-    new_tool2_id = cursor.fetchall()[0]["@last_uuid"]
+    cursor.execute(insert_default_tool_query_2)
 
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO `loan` (tool_id, loan_to_group_id, loan_datetime) VALUES ('{0}', '{1}', '2020-01-01 10:13:13');".format(new_tool1_id, new_group_id))
-    cursor.execute("INSERT INTO `loan` (tool_id, loan_to_group_id, loan_datetime) VALUES ('{0}', '{1}', '2020-01-01 13:13:13');".format(new_tool1_id, new_group_id))
+    cursor.execute("INSERT INTO `loan` (tool_id, loan_to_group_id, loan_datetime) VALUES ('{0}', '{1}', '2020-01-01 10:13:13');".format(1, new_group_id))
+    cursor.execute("INSERT INTO `loan` (tool_id, loan_to_group_id, loan_datetime) VALUES ('{0}', '{1}', '2020-01-01 13:13:13');".format(1, new_group_id))
     cursor.execute("SELECT @last_uuid;")
     new_loan1_id = cursor.fetchall()[0]["@last_uuid"]
 
 with PyMySQL.cursor() as cursor:
-    cursor.execute("UPDATE tool SET latest_loan='{0}' WHERE tool_id='{1}';".format(new_loan1_id, new_tool1_id))
+    cursor.execute("UPDATE tool SET latest_loan='{0}' WHERE tool_id='{1}';".format(new_loan1_id, 1))
 
-response = login_session.get(BACKEND_URL+"/loans/get_all").content.decode("utf-8")
+response = login_session.get(BACKEND_URL+"/tools/get_all").content.decode("utf-8")
 
-to_compare = '{{"_tools_count":2,"loans_get_all":[{{"loaned":1,"on_loan_to":"name 1","tool_id":"{0}","tool_name":"tool name 1"}},{{"loaned":0,"on_loan_to":null,"tool_id":"{1}","tool_name":"tool name 2"}}]}}\n'.format(new_tool1_id, new_tool2_id)
+
+to_compare = '{"_tools_count":2,"tools_get_all":[{"description":null,"group_name":"name 1","loan_datetime":"Wed, 01 Jan 2020 13:13:13 GMT","loaned_status":1,"name":"tool name 1","tool_id":"1"},{"description":null,"group_name":null,"loan_datetime":null,"loaned_status":0,"name":"tool name 2","tool_id":"2"}]}\n'
 
 if response == to_compare:
     pass_count += 1
@@ -284,7 +292,7 @@ if response == to_compare:
 else:
     print("response: \n{0}".format(response))
     print("to_compare: \n{0}".format(to_compare))
-    print("test failed: /loans/get_all - positive test")
+    print("test failed: /tools/get_all - positive test")
     index_of_string_difference(response, to_compare)
     test_count += 1
 
@@ -304,7 +312,7 @@ with PyMySQL.cursor() as cursor:
     new_user2_id = cursor.fetchall()[0]["@last_uuid"]
 
 response = login_session.get(BACKEND_URL+"/participants/get_all").content.decode("utf-8")
-to_compare = '{{"_participants_count":2,"participants_all":[{{"id":"{0}","name":"user 1","registered":0}},{{"id":"{1}","name":"user 2","registered":1}}]}}\n'.format(new_user1_id, new_user2_id)
+to_compare = '{{"_participants_count":2,"participants_all":[{{"given_cash":0,"id":"{0}","name":"user 1","registered":0}},{{"given_cash":0,"id":"{1}","name":"user 2","registered":1}}]}}\n'.format(new_user1_id, new_user2_id)
 
 if response == to_compare:
     pass_count += 1
@@ -478,7 +486,7 @@ request_body = {
     "shirt_size": "S",
     "previous_hackathons_attended": "1-3",
     "bringing_utensils": "I don't have a set and I'll buy my own before the hackathon",
-    "team_allocation_preference": "forming team during hackathon", 
+    "team_allocation_preference": "No, I want to form my own team at the Hackathon", 
     "utensil_color": "Peony", 
     "technology_of_interest":[
         "Software Platforms", 
@@ -515,7 +523,7 @@ with PyMySQL.cursor() as cursor:
     cursor.execute(query)
     user_query = str(cursor.fetchall())
 
-user_query_to_compare = """[{{'user_id': '{0}', 'name': 'user 2', 'contact_number': '91234568', 'email': 'test.email.com.sg', 'group_id': '1', 'registered': 0, 'DoB': datetime.datetime(2020, 2, 2, 0, 0), 'gender': 'Male', 'nationality': 'bangalore', 'organisation': 'STD', 'designation': 'hustler', 'dietary_pref': 'Vegetarian', 'NoK_name': 'NoK name 2', 'NoK_relationship': 'other NoK_relationship 1', 'NoK_contact_number': '90000002', 'shirt_size': 'S', 'previous_hackathons_attended': '1-3', 'bringing_utensils': "I don't have a set and I'll buy my own before the hackathon", 'team_allocation_preference': 'forming team during hackathon', 'utensil_color': 'Peony'}}]""".format(new_user1_id)
+user_query_to_compare = """[{{'user_id': '{0}', 'name': 'user 2', 'contact_number': '91234568', 'email': 'test.email.com.sg', 'group_id': '1', 'registered': 0, 'DoB': datetime.datetime(2020, 2, 2, 0, 0), 'gender': 'Male', 'nationality': 'bangalore', 'organisation': 'STD', 'designation': 'hustler', 'dietary_pref': 'Vegetarian', 'NoK_name': 'NoK name 2', 'NoK_relationship': 'other NoK_relationship 1', 'NoK_contact_number': '90000002', 'shirt_size': 'S', 'previous_hackathons_attended': '1-3', 'bringing_utensils': "I don't have a set and I'll buy my own before the hackathon", 'team_allocation_preference': 'No, I want to form my own team at the Hackathon', 'utensil_color': 'Peony', 'given_cash': 0}}]""".format(new_user1_id)
 if user_query == user_query_to_compare:
     pass_count += 1
     test_count += 1
@@ -635,7 +643,6 @@ else:
     index_of_string_difference(workshops_query, workshops_to_compare)
     test_count += 1
 
-
 clean_all_tables()
 
 
@@ -738,42 +745,14 @@ clean_all_tables()
 
 
 
-### /consumables/get_all - positive test
-with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO consumable (name, description, stock_qty, total_qty, quota_per_group) VALUES ('name 1', 'description 1', 4, 10, 1)")
-    cursor.execute("SELECT @last_uuid;")
-    new_consumable1_id = cursor.fetchall()[0]["@last_uuid"]
-
-with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO consumable (name, description, stock_qty, total_qty, quota_per_group) VALUES ('name 2', 'description 2', 4, 10, 1)")
-    cursor.execute("SELECT @last_uuid;")
-    new_consumable2_id = cursor.fetchall()[0]["@last_uuid"]
-
-response = login_session.get(BACKEND_URL+"/consumables/get_all").content.decode("utf-8")
-to_compare = '{{"_consumables_count":2,"consumables_get_all":[{{"id":"{0}","name":"name 1","quota_per_group":1,"remaining_count":6}},{{"id":"{1}","name":"name 2","quota_per_group":1,"remaining_count":6}}]}}\n'.format(new_consumable1_id, new_consumable2_id)
-
-if response == to_compare:
-    pass_count += 1
-    test_count += 1
-else:
-    print("response: \n{0}".format(response))
-    print("to_compare: \n{0}".format(to_compare))
-    print("test failed: /consumables/get_all - positive test")
-    index_of_string_difference(response, to_compare)
-    test_count += 1
-
-clean_all_tables()
-
-
-
 ### /groups/get_all - positive test
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO `group` (name, space) VALUES ('name 1', 'space 1')")
+    cursor.execute(insert_default_group_query_1)
     cursor.execute("SELECT @last_uuid;")
     new_group1_id = cursor.fetchall()[0]["@last_uuid"]
 
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO `group` (name, space) VALUES ('name 2', 'space 2')")
+    cursor.execute(insert_default_group_query_2)
     cursor.execute("SELECT @last_uuid;")
     new_group2_id = cursor.fetchall()[0]["@last_uuid"]
 
@@ -796,9 +775,25 @@ clean_all_tables()
 
 ### /groups/ID/alldata - positive test
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO `group` (name, space) VALUES ('name 1', 'space 1')")
+    cursor.execute(insert_default_group_query_1)
     cursor.execute("SELECT @last_uuid;")
     new_group1_id = cursor.fetchall()[0]["@last_uuid"]
+
+with PyMySQL.cursor() as cursor:
+    cursor.execute(insert_default_user_query)
+    cursor.execute("SELECT @last_uuid;")
+    new_user1_id = cursor.fetchall()[0]["@last_uuid"]
+
+with PyMySQL.cursor() as cursor:
+    cursor.execute("UPDATE user SET group_id='{0}' WHERE user_id='{1}'".format(new_group1_id, new_user1_id))
+
+with PyMySQL.cursor() as cursor:
+    cursor.execute(insert_alt_user_query)
+    cursor.execute("SELECT @last_uuid;")
+    new_user2_id = cursor.fetchall()[0]["@last_uuid"]
+
+with PyMySQL.cursor() as cursor:
+    cursor.execute("UPDATE user SET group_id='{0}' WHERE user_id='{1}'".format(new_group1_id, new_user2_id))
 
 with PyMySQL.cursor() as cursor:
     cursor.execute("INSERT INTO competition_category (name) VALUES ('name 1')")
@@ -817,7 +812,7 @@ with PyMySQL.cursor() as cursor:
     cursor.execute("INSERT INTO category_group (category_id, group_id) VALUES ('{0}', '{1}')".format(new_category2_id, new_group1_id))
 
 response = login_session.get(BACKEND_URL+"/groups/{0}/alldata".format(new_group1_id)).content.decode("utf-8")
-to_compare = '{{"groups_ID_alldata":{{"competition_categories":["name 1","name 2"],"hacking_space":"space 1","id":"{0}","name":"name 1"}}}}\n'.format(new_group1_id)
+to_compare = '{{"groups_ID_alldata":{{"competition_categories":["name 1","name 2"],"hacking_space":"space 1","id":"{0}","members":[{{"name":"user 1","user_id":"{1}"}},{{"name":"user 2","user_id":"{2}"}}],"name":"name 1"}}}}\n'.format(new_group1_id, new_user1_id, new_user2_id)
 
 if response == to_compare:
     pass_count += 1
@@ -835,7 +830,7 @@ clean_all_tables()
 
 ### /groups/ID/update - positive test
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO `group` (name, space, hack_submitted) VALUES ('name 1', 'space 1', 0)")
+    cursor.execute(insert_default_group_query_1)
     cursor.execute("SELECT @last_uuid;")
     new_group_id = cursor.fetchall()[0]["@last_uuid"]
 
@@ -859,7 +854,7 @@ with PyMySQL.cursor() as cursor:
     cursor.execute("SELECT * FROM `group` WHERE group_id='{0}'".format(new_group_id))
     group_query = str(cursor.fetchall())
 
-group_to_compare = "[{{'group_id': '{0}', 'name': 'name 2', 'space': 'space 2', 'hack_submitted': 0}}]".format(new_group_id)
+group_to_compare = "[{{'group_id': '{0}', 'name': 'name 2', 'space': 'space 2', 'hack_submitted': 0, 'utensils_returned': 0}}]".format(new_group_id)
 
 if group_query == group_to_compare:
     pass_count += 1
@@ -893,7 +888,7 @@ clean_all_tables()
 
 ### /groups/ID/update - Value of key category did not obey schema
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO `group` (name, space, hack_submitted) VALUES ('name 1', 'space 1', 0)")
+    cursor.execute(insert_default_group_query_1)
     cursor.execute("SELECT @last_uuid;")
     new_group_id = cursor.fetchall()[0]["@last_uuid"]
 
@@ -916,23 +911,55 @@ clean_all_tables()
 
 
 ### /groups/create - positive test
-request_body = {"name": "name 1", "hacking_space": "space 1", "hack_submitted": 0}
+with PyMySQL.cursor() as cursor:
+    cursor.execute(insert_default_user_query)
+    cursor.execute("SELECT @last_uuid;")
+    new_user1_id = cursor.fetchall()[0]["@last_uuid"]
+
+with PyMySQL.cursor() as cursor:
+    cursor.execute("UPDATE user SET group_id=NULL WHERE user_id='{0}'".format(new_user1_id))
+
+with PyMySQL.cursor() as cursor:
+    cursor.execute(insert_alt_user_query)
+    cursor.execute("SELECT @last_uuid;")
+    new_user2_id = cursor.fetchall()[0]["@last_uuid"]
+
+with PyMySQL.cursor() as cursor:
+    cursor.execute("UPDATE user SET group_id=NULL WHERE user_id='{0}'".format(new_user2_id))
+
+request_body = {"name": "name 1", "hacking_space": "space 1", "members": [new_user1_id, new_user2_id]}
 response = json.loads(login_session.post(BACKEND_URL+"/groups/create", json=request_body).content.decode("utf-8"))
 
 with PyMySQL.cursor() as cursor:
     cursor.execute("SELECT * FROM `group`;")
-    query_result = str(cursor.fetchall())
+    group_query = str(cursor.fetchall())
 
-to_compare = "[{{'group_id': '{0}', 'name': 'name 1', 'space': 'space 1', 'hack_submitted': 0}}]".format(response["group_id"])
+group_to_compare = "[{{'group_id': '{0}', 'name': 'name 1', 'space': 'space 1', 'hack_submitted': 0, 'utensils_returned': 0}}]".format(response["group_id"])
 
-if query_result == to_compare:
+with PyMySQL.cursor() as cursor:
+    cursor.execute("SELECT user_id FROM user WHERE group_id='{0}'".format(response["group_id"]))
+    group_members_query = str(cursor.fetchall())
+
+group_members_query_to_compare = "[{{'user_id': '{0}'}}, {{'user_id': '{1}'}}]".format(new_user1_id, new_user2_id)
+
+if group_query == group_to_compare:
     pass_count += 1
     test_count += 1
 else:
-    print("response: \n{0}".format(query_result))
-    print("to_compare: \n{0}".format(to_compare))
-    print("test failed: /groups/create - positive test")
-    index_of_string_difference(query_result, to_compare)
+    print("response: \n{0}".format(group_query))
+    print("to_compare: \n{0}".format(group_to_compare))
+    print("test failed: /groups/create - positive test (group_query)")
+    index_of_string_difference(group_query, group_to_compare)
+    test_count += 1
+
+if group_members_query == group_members_query_to_compare:
+    pass_count += 1
+    test_count += 1
+else:
+    print("response: \n{0}".format(group_members_query))
+    print("to_compare: \n{0}".format(group_members_query_to_compare))
+    print("test failed: /groups/create - positive test (group_members)")
+    index_of_string_difference(group_members_query, group_members_query_to_compare)
     test_count += 1
 
 clean_all_tables()
@@ -940,21 +967,18 @@ clean_all_tables()
 
 
 ### /loans/ID/loan/ID - positive test
-query = "INSERT INTO `group` (name, space) VALUES ('group name 1', 'space 1');"
 with PyMySQL.cursor() as cursor:
-    cursor.execute(query)
+    cursor.execute(insert_default_group_query_1)
     cursor.execute("SELECT @last_uuid;")
     new_group_id = cursor.fetchall()[0]["@last_uuid"]
 
-query = "INSERT INTO `tool` (loaned, name, description, latest_loan) VALUES (0, 'tool name 1', 'tool description 1', null);"
+query = "INSERT INTO `tool` (tool_id, loaned, name, description, latest_loan) VALUES ('1', 0, 'tool name 1', 'tool description 1', null);"
 with PyMySQL.cursor() as cursor:
     cursor.execute(query)
-    cursor.execute("SELECT @last_uuid;")
-    new_tool_id = cursor.fetchall()[0]["@last_uuid"]
 
-response = login_session.post(BACKEND_URL+"/loans/{0}/loan/{1}".format(new_group_id, new_tool_id)).content.decode("utf-8")
+response = login_session.post(BACKEND_URL+"/loans/{0}/loan/{1}".format(new_group_id, 1)).content.decode("utf-8")
 
-query = "SELECT loan_id FROM loan WHERE loan_to_group_id='{0}' AND tool_id='{1}'".format(new_group_id, new_tool_id)
+query = "SELECT loan_id FROM loan WHERE loan_to_group_id='{0}' AND tool_id='{1}'".format(new_group_id, 1)
 with PyMySQL.cursor() as cursor:
     cursor.execute(query)
     query_result_loan_id = cursor.fetchall()
@@ -964,7 +988,7 @@ if query_result_loan_id == []:
     index_of_string_difference(query_result, to_compare)
     test_count += 1
 else:
-    query = "SELECT latest_loan FROM tool WHERE tool_id='{0}'".format(new_tool_id)
+    query = "SELECT latest_loan FROM tool WHERE tool_id='{0}'".format(1)
     with PyMySQL.cursor() as cursor:
         cursor.execute(query)
         query_result = cursor.fetchall()
@@ -984,13 +1008,11 @@ clean_all_tables()
 
 
 ### /loans/ID/loan/ID - negative test - tool has already been loaned out
-query = "INSERT INTO `tool` (loaned, name, description, latest_loan) VALUES (1, 'tool name 1', 'tool description 1', '1');"
+query = "INSERT INTO `tool` (tool_id, loaned, name, description, latest_loan) VALUES ('1', 1, 'tool name 1', 'tool description 1', '1');"
 with PyMySQL.cursor() as cursor:
     cursor.execute(query)
-    cursor.execute("SELECT @last_uuid;")
-    new_tool_id = cursor.fetchall()[0]["@last_uuid"]
 
-response = login_session.post(BACKEND_URL+"/loans/{0}/loan/{1}".format("1", new_tool_id)).content.decode("utf-8")
+response = login_session.post(BACKEND_URL+"/loans/{0}/loan/{1}".format("1", 1)).content.decode("utf-8")
 to_compare = '{"error":"tool has already been loaned out"}\n'
 
 if response == to_compare:
@@ -1008,15 +1030,13 @@ clean_all_tables()
 
 
 ### /loans/return/ID - positive test
-query = "INSERT INTO `tool` (loaned, name, description, latest_loan) VALUES (1, 'tool name 1', 'tool description 1', '1');"
+query = "INSERT INTO `tool` (tool_id, loaned, name, description, latest_loan) VALUES ('1', 1, 'tool name 1', 'tool description 1', '1');"
 with PyMySQL.cursor() as cursor:
     cursor.execute(query)
-    cursor.execute("SELECT @last_uuid;")
-    new_tool_id = cursor.fetchall()[0]["@last_uuid"]
 
-response = login_session.put(BACKEND_URL+"/loans/return/{0}".format(new_tool_id)).content.decode("utf-8")
+response = login_session.put(BACKEND_URL+"/loans/return/{0}".format(1)).content.decode("utf-8")
 
-query = "SELECT loaned FROM tool WHERE tool_id='{0}'".format(new_tool_id)
+query = "SELECT loaned FROM tool WHERE tool_id='{0}'".format(1)
 with PyMySQL.cursor() as cursor:
     cursor.execute(query)
     query_result = str(cursor.fetchall())
@@ -1038,9 +1058,8 @@ clean_all_tables()
 
 
 ### /groups/ID/submit - positive test
-query = "INSERT INTO `group` (name, space, hack_submitted) VALUES ('name 1', 'space 1', 0)"
 with PyMySQL.cursor() as cursor:
-    cursor.execute(query)
+    cursor.execute(insert_default_group_query_1)
     cursor.execute("SELECT @last_uuid;")
     new_group_id = cursor.fetchall()[0]["@last_uuid"]
 
@@ -1068,9 +1087,8 @@ clean_all_tables()
 
 
 ### /groups/ID/unsubmit - positive test
-query = "INSERT INTO `group` (name, space, hack_submitted) VALUES ('name 1', 'space 1', 1)"
 with PyMySQL.cursor() as cursor:
-    cursor.execute(query)
+    cursor.execute(insert_default_group_query_1)
     cursor.execute("SELECT @last_uuid;")
     new_group_id = cursor.fetchall()[0]["@last_uuid"]
 
@@ -1097,90 +1115,9 @@ clean_all_tables()
 
 
 
-### /consumables/ID/take/ID/COUNT - positive test
-query = "INSERT INTO consumable (name, description, stock_qty, total_qty, quota_per_group) VALUES ('consumable name 1', 'consumable description 1', 6, 10, 3);"
-with PyMySQL.cursor() as cursor:
-    cursor.execute(query)
-    cursor.execute("SELECT @last_uuid;")
-    new_consumable_id = cursor.fetchall()[0]["@last_uuid"]
-
-query = "INSERT INTO `group` (name, space) VALUES ('group name 1', 'group space 1');"
-with PyMySQL.cursor() as cursor:
-    cursor.execute(query)
-    cursor.execute("SELECT @last_uuid;")
-    new_group_id = cursor.fetchall()[0]["@last_uuid"]
-
-query = "INSERT INTO consumable_group (group_id, consumable_id, qty) VALUES ('{0}', '{1}', 3);".format(new_group_id, new_consumable_id)
-with PyMySQL.cursor() as cursor:
-    cursor.execute(query)
-
-response = login_session.put(BACKEND_URL+"/consumables/{0}/take/{1}/{2}".format(new_group_id, new_consumable_id, 2), json=request_body).content.decode("utf-8")
-
-query = "SELECT qty FROM consumable_group WHERE group_id='{0}' AND consumable_id='{1}'".format(new_group_id, new_consumable_id)
-with PyMySQL.cursor() as cursor:
-    cursor.execute(query)
-    query_result = str(cursor.fetchall())
-
-to_compare = "[{'qty': 1}]"
-
-if query_result == to_compare:
-    pass_count += 1
-    test_count += 1
-else:
-    print("response: \n{0}".format(query_result))
-    print("to_compare: \n{0}".format(to_compare))
-    print("/consumables/ID/take/ID/COUNT - positive test")
-    index_of_string_difference(query_result, to_compare)
-    test_count += 1
-
-clean_all_tables()
-
-
-
-### /consumables/ID/return/ID/COUNT - positive test
-query = "INSERT INTO consumable (name, description, stock_qty, total_qty, quota_per_group) VALUES ('consumable name 1', 'consumable description 1', 6, 10, 3);"
-with PyMySQL.cursor() as cursor:
-    cursor.execute(query)
-    cursor.execute("SELECT @last_uuid;")
-    new_consumable_id = cursor.fetchall()[0]["@last_uuid"]
-
-query = "INSERT INTO `group` (name, space) VALUES ('group name 1', 'group space 1');"
-with PyMySQL.cursor() as cursor:
-    cursor.execute(query)
-    cursor.execute("SELECT @last_uuid;")
-    new_group_id = cursor.fetchall()[0]["@last_uuid"]
-
-query = "INSERT INTO consumable_group (group_id, consumable_id, qty) VALUES ('{0}', '{1}', 1);".format(new_group_id, new_consumable_id)
-with PyMySQL.cursor() as cursor:
-    cursor.execute(query)
-
-response = login_session.put(BACKEND_URL+"/consumables/{0}/return/{1}/{2}".format(new_group_id, new_consumable_id, 2), json=request_body).content.decode("utf-8")
-
-query = "SELECT qty FROM consumable_group WHERE group_id='{0}' AND consumable_id='{1}'".format(new_group_id, new_consumable_id)
-with PyMySQL.cursor() as cursor:
-    cursor.execute(query)
-    query_result = str(cursor.fetchall())
-
-to_compare = "[{'qty': 3}]"
-
-if query_result == to_compare:
-    pass_count += 1
-    test_count += 1
-else:
-    print("response: \n{0}".format(query_result))
-    print("to_compare: \n{0}".format(to_compare))
-    print("/consumables/ID/return/ID/COUNT - positive test")
-    index_of_string_difference(query_result, to_compare)
-    test_count += 1
-
-clean_all_tables()
-
-
-
 ### /groups/ID/update_members - positive test
-query = "INSERT INTO `group` (name, space, hack_submitted) VALUES ('name 1', 'space 1', 0)"
 with PyMySQL.cursor() as cursor:
-    cursor.execute(query)
+    cursor.execute(insert_default_group_query_1)
     cursor.execute("SELECT @last_uuid;")
     new_group_id = cursor.fetchall()[0]["@last_uuid"]
 
@@ -1371,113 +1308,110 @@ clean_all_tables()
 
 
 
-### /consumables/ID/update - positive test
+### /participants/ID/given_cash - positive test
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO `group` (name, space) VALUES ('name 1', 'space 1')")
+    cursor.execute(insert_default_user_query)
     cursor.execute("SELECT @last_uuid;")
-    new_group_id = cursor.fetchall()[0]["@last_uuid"]
+    new_user_id = cursor.fetchall()[0]["@last_uuid"]
+
+response = login_session.put(BACKEND_URL+"/participants/{0}/given_cash".format(new_user_id)).content.decode("utf-8")
 
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO `consumable` (name, description, stock_qty, total_qty, quota_per_group) VALUES ('name 1', 'description 1', 10, 10, 3)")
-    cursor.execute("SELECT @last_uuid;")
-    new_consumable_id = cursor.fetchall()[0]["@last_uuid"]
+    cursor.execute("SELECT given_cash FROM user WHERE user_id='{0}';".format(new_user_id))
+    query_result = cursor.fetchall()[0]["given_cash"]
 
-with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO `consumable_group` (group_id, consumable_id, qty) VALUES ('{0}', '{1}', 1)".format(new_group_id, new_consumable_id))
-
-request_body = {
-    "name": "name 2",
-    "description": "description 2",
-    "total_qty": 9,
-    "quota_per_group": 5
-}
-response = login_session.put(BACKEND_URL+"/consumables/{0}/update".format(new_consumable_id), json=request_body).content.decode("utf-8")
-
-with PyMySQL.cursor() as cursor:
-    cursor.execute("SELECT * FROM consumable WHERE consumable_id='{0}'".format(new_consumable_id))
-    response = str(cursor.fetchall()[0])
-to_compare = "{{'consumable_id': '{0}', 'name': 'name 2', 'description': 'description 2', 'stock_qty': 9, 'total_qty': 9, 'quota_per_group': 5}}".format(new_consumable_id)
-
-if response == to_compare:
+if query_result == 1:
     pass_count += 1
     test_count += 1
 else:
-    print("response: \n{0}".format(response))
-    print("to_compare: \n{0}".format(to_compare))
-    print("/consumables/ID/update - positive test")
-    index_of_string_difference(response, to_compare)
+    print("query_result: \n{0}".format(response))
+    print("to_compare: \n{0}".format(1))
+    print("/participants/ID/given_cash - positive test")
     test_count += 1
 
 clean_all_tables()
 
 
 
-### /consumables/ID/update - quantity lesser than amount already consumed by groups
+### /participants/ID/ungiven_cash - positive test
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO `group` (name, space) VALUES ('name 1', 'space 1')")
+    cursor.execute(insert_default_user_query)
     cursor.execute("SELECT @last_uuid;")
-    new_group_id = cursor.fetchall()[0]["@last_uuid"]
+    new_user_id = cursor.fetchall()[0]["@last_uuid"]
 
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO `consumable` (name, description, stock_qty, total_qty, quota_per_group) VALUES ('name 1', 'description 1', 10, 10, 10)")
-    cursor.execute("SELECT @last_uuid;")
-    new_consumable_id = cursor.fetchall()[0]["@last_uuid"]
+    cursor.execute("UPDATE user SET given_cash=1 WHERE user_id='{0}'".format(new_user_id))
+
+response = login_session.put(BACKEND_URL+"/participants/{0}/ungiven_cash".format(new_user_id)).content.decode("utf-8")
 
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO `consumable_group` (group_id, consumable_id, qty) VALUES ('{0}', '{1}', 10)".format(new_group_id, new_consumable_id))
+    cursor.execute("SELECT given_cash FROM user WHERE user_id='{0}';".format(new_user_id))
+    query_result = cursor.fetchall()[0]["given_cash"]
 
-request_body = {
-    "total_qty": 9
-}
-response = login_session.put(BACKEND_URL+"/consumables/{0}/update".format(new_consumable_id), json=request_body).content.decode("utf-8")
-to_compare = '{"error":"quantity lesser than amount already consumed by groups"}\n'
-
-if response == to_compare:
+if query_result == 0:
     pass_count += 1
     test_count += 1
 else:
-    print("response: \n{0}".format(response))
-    print("to_compare: \n{0}".format(to_compare))
-    print("/consumables/ID/update - quantity lesser than amount already consumed by groups")
-    index_of_string_difference(response, to_compare)
+    print("query_result: \n{0}".format(response))
+    print("to_compare: \n{0}".format(0))
+    print("/participants/ID/ungiven_cash - positive test")
     test_count += 1
 
 clean_all_tables()
 
 
 
-### /consumables/ID/update - groups NAME have consumed more than new quota
+### /groups/ID/utensils_returned - positive test
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO `group` (name, space) VALUES ('name 1', 'space 1')")
+    cursor.execute(insert_default_group_query_1)
     cursor.execute("SELECT @last_uuid;")
     new_group_id = cursor.fetchall()[0]["@last_uuid"]
 
-with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO `consumable` (name, description, stock_qty, total_qty, quota_per_group) VALUES ('name 1', 'description 1', 10, 10, 5)")
-    cursor.execute("SELECT @last_uuid;")
-    new_consumable_id = cursor.fetchall()[0]["@last_uuid"]
+response = login_session.put(BACKEND_URL+"/groups/{0}/utensils_returned".format(new_group_id)).content.decode("utf-8")
 
 with PyMySQL.cursor() as cursor:
-    cursor.execute("INSERT INTO `consumable_group` (group_id, consumable_id, qty) VALUES ('{0}', '{1}', 5)".format(new_group_id, new_consumable_id))
+    cursor.execute("SELECT utensils_returned FROM `group` WHERE group_id='{0}'".format(new_group_id))
+    query_result = str(cursor.fetchall())
 
-request_body = {
-    "quota_per_group": 4
-}
-response = login_session.put(BACKEND_URL+"/consumables/{0}/update".format(new_consumable_id), json=request_body).content.decode("utf-8")
-to_compare = '{"error":"groups name 1 have consumed more than new quota"}\n'
+to_compare = "[{'utensils_returned': 1}]"
 
-if response == to_compare:
+if query_result == to_compare:
     pass_count += 1
     test_count += 1
 else:
-    print("response: \n{0}".format(response))
+    print("query_result: \n{0}".format(response))
     print("to_compare: \n{0}".format(to_compare))
-    print("/consumables/ID/update - groups NAME have consumed more than new quota")
-    index_of_string_difference(response, to_compare)
+    print("/groups/ID/utensils_returned - positive test")
     test_count += 1
 
 clean_all_tables()
 
+
+
+### /groups/ID/utensils_loaned - positive test
+with PyMySQL.cursor() as cursor:
+    cursor.execute(insert_default_group_query_1)
+    cursor.execute("SELECT @last_uuid;")
+    new_group_id = cursor.fetchall()[0]["@last_uuid"]
+
+response = login_session.put(BACKEND_URL+"/groups/{0}/utensils_loaned".format(new_group_id)).content.decode("utf-8")
+
+with PyMySQL.cursor() as cursor:
+    cursor.execute("SELECT utensils_returned FROM `group` WHERE group_id='{0}'".format(new_group_id))
+    query_result = str(cursor.fetchall())
+
+to_compare = "[{'utensils_returned': 0}]"
+
+if query_result == to_compare:
+    pass_count += 1
+    test_count += 1
+else:
+    print("query_result: \n{0}".format(response))
+    print("to_compare: \n{0}".format(to_compare))
+    print("/groups/ID/utensils_loaned - positive test")
+    test_count += 1
+
+clean_all_tables()
 
 
 

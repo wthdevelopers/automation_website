@@ -1,8 +1,11 @@
 {
     "team_allocation_preference": [
         "soloist",
-        "forming team during hackathon", 
-        "already in a group"
+        "No, I want to form my own team at the Hackathon", 
+        "Placed in a team, yes", 
+        "Full team, yes", 
+        "No and I like it that way",
+        "No and I would like to combine with other partial teams"
     ],
     "gender": [
         "Female", 
