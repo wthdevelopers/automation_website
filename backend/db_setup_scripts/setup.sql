@@ -54,6 +54,7 @@ create table `group` ( \
         `name` text NOT NULL, \
         `space` text, \
 	`hack_submitted` tinyint NOT NULL default 0, \
+	`utensils_returned` tinyint NOT NULL default 0, \
         PRIMARY KEY(group_id) \
 );
 create trigger group_trigger before insert on `group` for each row set @last_uuid=uuid(), NEW.group_id=@last_uuid;
@@ -233,6 +234,7 @@ create table `group` ( \
         `name` text NOT NULL, \
         `space` text, \
 	`hack_submitted` tinyint NOT NULL default 0, \
+	`utensils_returned` tinyint NOT NULL default 0, \
         PRIMARY KEY(group_id) \
 );
 create trigger group_trigger before insert on `group` for each row set @last_uuid=uuid(), NEW.group_id=@last_uuid;
